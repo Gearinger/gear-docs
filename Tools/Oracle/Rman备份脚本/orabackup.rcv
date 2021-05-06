@@ -1,0 +1,12 @@
+run{
+	backup incremental level=1 database format 'D:\个人文件\MarkDown记录\Oracle\Rman备份脚本/Backup/%d_%p_%t_%c_%T.bkp';
+}
+#检查
+crosscheck copy;
+crosscheck backup;
+crosscheck backupset;
+crosscheck archivelog all;
+#删除过期
+delete expired backup;
+delete obsolete;
+exit;

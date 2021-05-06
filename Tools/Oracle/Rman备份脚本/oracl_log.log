@@ -1,0 +1,101 @@
+
+恢复管理器: Release 11.2.0.4.0 - Production on 星期一 7月 6 15:29:49 2020
+
+Copyright (c) 1982, 2011, Oracle and/or its affiliates.  All rights reserved.
+
+已连接到目标数据库: TEST (DBID=2342867704)
+使用目标数据库控制文件替代恢复目录
+
+RMAN> run{
+2> 	backup incremental level=1 database format 'D:\个人文件\MarkDown记录\Oracle\Rman备份脚本/Backup/%d_%p_%t_%c_%T.bkp';
+3> }
+4> #检查
+5> crosscheck copy;
+6> crosscheck backup;
+7> crosscheck backupset;
+8> crosscheck archivelog all;
+9> #删除过期
+10> delete expired backup;
+11> delete obsolete;
+12> exit;
+启动 backup 于 06-7月 -20
+分配的通道: ORA_DISK_1
+通道 ORA_DISK_1: SID=69 设备类型=DISK
+通道 ORA_DISK_1: 正在启动增量级别 1 数据文件备份集
+通道 ORA_DISK_1: 正在指定备份集内的数据文件
+输入数据文件: 文件号=00001 名称=D:\APP\191117\ORADATA\TEST\SYSTEM01.DBF
+输入数据文件: 文件号=00002 名称=D:\APP\191117\ORADATA\TEST\SYSAUX01.DBF
+输入数据文件: 文件号=00003 名称=D:\APP\191117\ORADATA\TEST\UNDOTBS01.DBF
+输入数据文件: 文件号=00005 名称=D:\APP\191117\PRODUCT\11.2.0\DBHOME_2\DATABASE\TESTSPACE
+输入数据文件: 文件号=00004 名称=D:\APP\191117\ORADATA\TEST\USERS01.DBF
+通道 ORA_DISK_1: 正在启动段 1 于 06-7月 -20
+通道 ORA_DISK_1: 已完成段 1 于 06-7月 -20
+段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063791_1_20200706.BKP 标记=TAG20200706T152951 注释=NONE
+通道 ORA_DISK_1: 备份集已完成, 经过时间:00:00:35
+通道 ORA_DISK_1: 正在启动增量级别 1 数据文件备份集
+通道 ORA_DISK_1: 正在指定备份集内的数据文件
+备份集内包括当前控制文件
+备份集内包括当前的 SPFILE
+通道 ORA_DISK_1: 正在启动段 1 于 06-7月 -20
+通道 ORA_DISK_1: 已完成段 1 于 06-7月 -20
+段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063826_1_20200706.BKP 标记=TAG20200706T152951 注释=NONE
+通道 ORA_DISK_1: 备份集已完成, 经过时间:00:00:01
+完成 backup 于 06-7月 -20
+
+释放的通道: ORA_DISK_1
+分配的通道: ORA_DISK_1
+通道 ORA_DISK_1: SID=69 设备类型=DISK
+说明与资料档案库中的任何数据文件副本都不匹配
+说明与资料档案库中的任何控制文件副本都不匹配
+说明与资料档案库中的任何归档日志都不匹配
+
+使用通道 ORA_DISK_1
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063603_1_20200706.BKP RECID=40 STAMP=1045063604
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063679_1_20200706.BKP RECID=42 STAMP=1045063680
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063715_1_20200706.BKP RECID=43 STAMP=1045063718
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063791_1_20200706.BKP RECID=44 STAMP=1045063791
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063826_1_20200706.BKP RECID=45 STAMP=1045063828
+已交叉检验的 5 对象
+
+
+使用通道 ORA_DISK_1
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063603_1_20200706.BKP RECID=40 STAMP=1045063604
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063679_1_20200706.BKP RECID=42 STAMP=1045063680
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063715_1_20200706.BKP RECID=43 STAMP=1045063718
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063791_1_20200706.BKP RECID=44 STAMP=1045063791
+交叉校验备份片段: 找到为 'AVAILABLE'
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063826_1_20200706.BKP RECID=45 STAMP=1045063828
+已交叉检验的 5 对象
+
+
+释放的通道: ORA_DISK_1
+分配的通道: ORA_DISK_1
+通道 ORA_DISK_1: SID=69 设备类型=DISK
+说明与资料档案库中的任何归档日志都不匹配
+
+使用通道 ORA_DISK_1
+说明与资料档案库中的任何备份都不匹配
+
+RMAN 保留策略将应用于该命令
+将 RMAN 保留策略设置为冗余 1
+使用通道 ORA_DISK_1
+删除以下已废弃的备份和副本:
+类型                 关键字 完成时间           文件名/句柄
+-------------------- ------ ------------------ --------------------
+备份集               43     06-7月 -20        
+备份片段       43     06-7月 -20         D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063715_1_20200706.BKP
+已删除备份片段
+备份片段句柄=D:\个人文件\MARKDOWN记录\ORACLE\RMAN备份脚本\BACKUP\TEST_1_1045063715_1_20200706.BKP RECID=43 STAMP=1045063718
+1 对象已删除
+
+
+恢复管理器完成。

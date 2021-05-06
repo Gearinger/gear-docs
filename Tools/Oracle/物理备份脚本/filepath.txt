@@ -1,0 +1,16 @@
+
+NAME                                                                            
+--------------------------------------------------------------------------------
+D:\APP\191117\FAST_RECOVERY_AREA\ORCL\CONTROL02.CTL                             
+D:\APP\191117\ORADATA\ORCL\CONTROL01.CTL                                        
+D:\APP\191117\ORADATA\ORCL\REDO01.LOG                                           
+D:\APP\191117\ORADATA\ORCL\REDO02.LOG                                           
+D:\APP\191117\ORADATA\ORCL\REDO03.LOG                                           
+D:\APP\191117\ORADATA\ORCL\SYSAUX01.DBF                                         
+D:\APP\191117\ORADATA\ORCL\SYSTEM01.DBF                                         
+D:\APP\191117\ORADATA\ORCL\UNDOTBS01.DBF                                        
+D:\APP\191117\ORADATA\ORCL\USERS01.DBF                                          
+D:\APP\191117\PRODUCT\11.2.0\DBHOME_2\DATABASE\SDE                              
+
+ÒÑÑ¡Ôñ10ÐÐ¡£
+

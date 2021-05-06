@@ -1,0 +1,1 @@
+Dev的GridControl表格中，在不结束编辑状态的情况下，调用GridView的PostEditor( )方法即可提交正在编辑的值。
