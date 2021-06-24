@@ -6,7 +6,7 @@
 
 Word模型中，主要结构包括Header、Main document body、Footer。主要内容在逻辑上可划分为多个Section，每个Section包含多个Paragraph。同时Section可包含多个Page。
 
-![image-20200312153208059](D:\个人文件\MarkDown记录\Wpf DevExpress中word、pdf处理\image-20200312153208059.png)
+![image-20200312153208059](.\image-20200312153208059.png)
 
 另外，还包括主要用于修饰的内容，**lists**, **styles**, **tables**,**inline pictures**, **floating  objects** (pictures and text boxes), **bookmarks**, **hyperlinks** and  **comments**。其中，Tables和Comments包含Paragraph。
 
