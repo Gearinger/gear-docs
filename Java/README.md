@@ -330,6 +330,10 @@ List<User> findByUserNameOrderByEmailDesc(String email);
 | FALSE             | findByActiveFalse()                     | … where x.active = false                                     |
 | IgnoreCase        | findByFirstnameIgnoreCase               | … where UPPER(x.firstame) = UPPER(?1)                        |
 
+## 六、IO
+
+![img](https://pic1.zhimg.com/80/v2-eb408ac849a679b09941be7ebd734768_720w.jpg)
+
 ## 代码生成工具的使用
 
 gitlab 路径：http://172.16.10.197/team-web-plat/result-management/generator
