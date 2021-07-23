@@ -152,7 +152,7 @@ public void AddElement(AxPageLayoutControl layoutControl, IEnvelope envelope)
 
 ### 5、CAD dwg文件
 
-#### （1）要素图层方式加载（完整显示符号，但不能选择要素）
+#### （1）栅格方式加载（完整显示符号，但不能选择要素）
 
 ~~~C#
 IWorkspaceFactory pWorkspaceFactory = new CadWorkspaceFactoryClass();
@@ -164,7 +164,7 @@ pCadLayer.CadDrawingDataset = pCadDataset;
 pMap.AddLayer(pCadLayer);
 ~~~
 
-#### （2）栅格方式加载（可选择要素，但符号显示存在问题）
+#### （2）要素图层方式加载（可选择要素，但符号显示存在问题）
 
 ~~~C#
 IWorkspaceFactory pWorkspaceFactory = new CadWorkspaceFactoryClass();
