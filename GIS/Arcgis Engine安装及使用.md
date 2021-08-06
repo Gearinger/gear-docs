@@ -199,3 +199,54 @@ for (int i = 0; i < pFeatureClassContainer.ClassCount; i++) {
 pMap.AddLayer(pGroupLayer);
 ~~~
 
+### 6、遍历图层，执行方法
+
+~~~C#
+/// <summary>
+/// 遍历非图层组的图层，执行方法action
+/// </summary>
+/// <param name="map"></param>
+/// <param name="action"></param>
+public static void TraverseAllLayers(IMap map, Action<ILayer> action)
+{
+    int layerCount = map.LayerCount;
+
+    for (int i = 0; i < layerCount; i++)
+    {
+        ILayer layer = map.Layer[i];
+        if (layer is IGroupLayer)
+        {
+            TraverseAllLayers(layer as IGroupLayer, action);
+        }
+        else
+        {
+            action(layer);
+        }
+    }
+
+}
+
+/// <summary>
+/// 遍历非图层组的图层，执行方法action
+/// </summary>
+/// <param name="groupLayer"></param>
+/// <param name="action"></param>
+public static void TraverseAllLayers(IGroupLayer groupLayer, Action<ILayer> action)
+{
+    ICompositeLayer compositeLayer = (groupLayer as ICompositeLayer);
+    int count = compositeLayer.Count;
+    for (int i = 0; i < count; i++)
+    {
+        ILayer layer = compositeLayer.Layer[i];
+        if (layer is IGroupLayer)
+        {
+            TraverseAllLayers(layer as IGroupLayer, action);
+        }
+        else
+        {
+            action(layer);
+        }
+    }
+}
+~~~
+

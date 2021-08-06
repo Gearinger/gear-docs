@@ -69,6 +69,12 @@ yum install docker-ce docker-ce-cli containerd.io
 > yum install docker-ce-<VERSION_STRING> docker-ce-cli-<VERSION_STRING> containerd.io
 > ```
 
+### 5、启动
+
+```sh
+systemctl start docker
+```
+
 ## 三、minikube
 
 ### 1、获取安装包
