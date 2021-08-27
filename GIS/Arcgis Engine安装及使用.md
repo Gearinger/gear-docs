@@ -293,17 +293,15 @@ public static extern int GetDeviceCaps(int hdc, int nIndex);
 public static extern int GetDC(int hWnd);
 [DllImport("User32.dll")]
 public static extern int ReleaseDC(int hWnd, int hDC);
-private static bool ExportTIFF(string sFileName)
+private static bool ExportTIFF(string sFileName, IEnvelope envelope)
 {
     try
     {
         var mapControl1 = AppHost.Current.PluginProvider.Gets<MapControlPage>().FirstOrDefault(p => ((ControlItem)p.Tag).Id == "Map1")?.mapControl;
 
         ExportTIFFClass pExporter = new ExportTIFFClass();
-        // 设置地图范围 (导坐标值必须设置)
-        pExporter.MapExtent = mapControl1.Extent;
-        // 是否导出坐标值
         pExporter.OutputWorldFile = true;
+        pExporter.MapExtent = mapControl1.Extent;
 
         IEnvelope pixelBoundsEnv = new EnvelopeClass();
 
@@ -323,7 +321,7 @@ private static bool ExportTIFF(string sFileName)
         exportRECT.right = (int)Math.Truncate(tempright);
 
         pixelBoundsEnv.PutCoords(exportRECT.left, exportRECT.top, exportRECT.right, exportRECT.bottom);
-        IEnvelope docMapExtEnv = null;
+        IEnvelope docMapExtEnv = envelope;  // 裁剪范围
         pExporter.PixelBounds = pixelBoundsEnv;
 
         int hDC = pExporter.StartExporting();
