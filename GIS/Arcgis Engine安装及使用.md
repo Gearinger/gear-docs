@@ -250,3 +250,96 @@ public static void TraverseAllLayers(IGroupLayer groupLayer, Action<ILayer> acti
 }
 ~~~
 
+### 7、加载mapsserver地图
+
+~~~C#
+/// <summary>
+/// 加载ArcGIS地图服务
+/// </summary>
+/// <param name="mapServerUrl"></param>
+/// <param name="name"></param>
+/// <returns></returns>
+private ILayer LoadMapServer(string mapServerUrl,string name)
+{
+    IMapServerRESTLayer mapServerRESTLayer = new MapServerRESTLayerClass();
+    mapServerRESTLayer.Connect(mapServerUrl);
+    ILayer layer = mapServerRESTLayer as ILayer;
+    layer.Name = name;
+    return layer;
+}
+
+/// <summary>
+/// 加载ImageServer地图服务
+/// </summary>
+/// <param name="mapServerUrl"></param>
+/// <param name="name"></param>
+/// <returns></returns>
+private ILayer LoadMapServer(string imageServerUrl,string name)
+{
+    IImageServerLayer imageserverlayer = new ImageServerLayerClass();
+    imageserverlayer.Initialize(imageServerUrl);
+    ILayer layer = imageserverlayer as ILayer;
+    layer.Name = name;
+    return layer;
+}
+~~~
+
+### 8、导出带坐标值的地图
+
+~~~C#
+[DllImport("GDI32.dll")]
+public static extern int GetDeviceCaps(int hdc, int nIndex);
+[DllImport("User32.dll")]
+public static extern int GetDC(int hWnd);
+[DllImport("User32.dll")]
+public static extern int ReleaseDC(int hWnd, int hDC);
+private static bool ExportTIFF(string sFileName, IEnvelope envelope)
+{
+    try
+    {
+        var mapControl1 = AppHost.Current.PluginProvider.Gets<MapControlPage>().FirstOrDefault(p => ((ControlItem)p.Tag).Id == "Map1")?.mapControl;
+
+        ExportTIFFClass pExporter = new ExportTIFFClass();
+        pExporter.OutputWorldFile = true;
+        pExporter.MapExtent = mapControl1.Extent;
+
+        IEnvelope pixelBoundsEnv = new EnvelopeClass();
+
+        tagRECT displayBounds = mapControl1.ActiveView.ScreenDisplay.DisplayTransformation.get_DeviceFrame();
+        tagRECT exportRECT;
+        var iOutputResolution = mapControl1.ActiveView.ScreenDisplay.DisplayTransformation.Resolution;
+        pExporter.Resolution = iOutputResolution;
+        pExporter.ExportFileName = sFileName;
+        var tmpDC = GetDC(0);
+        long iScreenResolution = GetDeviceCaps((int)tmpDC, 88);
+        double tempratio = iOutputResolution / iScreenResolution;
+        double tempbottom = displayBounds.bottom * tempratio;
+        double tempright = displayBounds.right * tempratio;
+        exportRECT.bottom = (int)Math.Truncate(tempbottom);
+        exportRECT.left = 0;
+        exportRECT.top = 0;
+        exportRECT.right = (int)Math.Truncate(tempright);
+
+        pixelBoundsEnv.PutCoords(exportRECT.left, exportRECT.top, exportRECT.right, exportRECT.bottom);
+        IEnvelope docMapExtEnv = envelope;  // 裁剪范围
+        pExporter.PixelBounds = pixelBoundsEnv;
+
+        int hDC = pExporter.StartExporting();
+
+        mapControl1.ActiveView.Output(hDC, Convert.ToInt32(pExporter.Resolution), ref displayBounds, docMapExtEnv, null);
+
+        pExporter.FinishExporting();
+        pExporter.Cleanup(); //清除临时文件
+        //释放资源
+        System.Runtime.InteropServices.Marshal.ReleaseComObject(pExporter);
+        WaitHelper.CloseWaiting();
+        return true;
+    }
+    catch (Exception e)
+    {
+        LogHelper.Error(e.Message);
+        return false;
+    }
+}
+~~~
+
