@@ -343,3 +343,13 @@ private static bool ExportTIFF(string sFileName, IEnvelope envelope)
 }
 ~~~
 
+### 9、数据视图同步到制图视图
+
+```C#
+IObjectCopy objectCopy = new ObjectCopyClass();
+object map = mapControl.Map;
+object copiedMap = objectCopy.Copy(map);
+object overwriteMap = layoutControl.ActiveView.FocusMap;
+objectCopy.Overwrite(copiedMap, ref overwriteMap);
+layoutControl.Refresh();
+```
