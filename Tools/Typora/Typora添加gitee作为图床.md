@@ -23,7 +23,7 @@ C:\Users\用户名\AppData\Roaming\Typora\picgo\win64>picgo install gitee-upload
     "transformer": "path",
     "gitee": {
       "repo": "gearinger/gear-markdown-pictures",
-      "token": "******",
+      "token": "**************",
       "path": "",
       "customUrl": "",
       "branch": "picgo"
@@ -34,10 +34,10 @@ C:\Users\用户名\AppData\Roaming\Typora\picgo\win64>picgo install gitee-upload
     "picgo-plugin-super-prefix": true
   },
   "picgo-plugin-super-prefix": {
-    "prefixFormat": "YYYY-MM-DD HH-mm-ss_"
+    "fileFormat": "YYYYMMDD-HHmm"
   },
   "picgo-plugin-gitee-uploader": {
-    "lastSync": "2021-09-04 11:42:21"
+    "lastSync": "2021-10-09 04:46:55"
   }
 }
 ~~~
