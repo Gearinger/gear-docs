@@ -850,26 +850,3 @@ except arcpy.ExecuteError:
 | updateLayerFromJSON (json_data)                              | 根据 JSON 字符串更新图层。                                   |
 
 
-
-## 地理数据库的连接
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

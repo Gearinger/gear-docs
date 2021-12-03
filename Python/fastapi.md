@@ -18,7 +18,7 @@ pip install uvicorn
 
 ## 二、创建API并运行
 
-### 1、简单的示例
+### 1、示例
 
 创建main.py文件
 
@@ -70,11 +70,4 @@ if __name__ == '__main__':
     uvicorn.run(app='Main:app', host="127.0.0.1", port=8000, reload=True, debug=True)
 ~~~
 
-
-
-### 2、main.py 文件的内容介紹
-
-~~~python
-
-~~~
 
