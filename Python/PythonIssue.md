@@ -156,4 +156,68 @@ True
 
 
 
+# windows环境下使用virtualenv
+
+1、创建一个文件夹
+2、启动命令行并进入该文件夹，键入如下命令（前提是你已经安装了python）：
+
+```cmd
+pip install virtualenv     # 安装 virtualenv 
+```
+
+
+3、在想要创建的文件夹内，键入如下命令：
+
+```cmd
+virtualenv venv            # venv 为创建的虚拟环境名，可自定义
+```
+
+4、激活虚拟的环境，在创建虚拟环境的文件夹内，键入如下命令：
+
+```cmd
+venv\Scripts\activate      # 还是老规矩，venv是虚拟环境名
+```
+
+
+
+# 利用cx_Freeze打包python项目
+
+- 步骤
+
+Windows环境下打包结果为exe，Linux环境下打包结果为二进制文件。
+
+Linux环境运行需使用命令：./文件
+
+~~~sh
+# 安装cx_freeze
+pip install cx_freeze
+
+# 打包项目
+cd .../项目
+cxfreeze 目标文件.py --target-dir 放置目标文件夹
+~~~
+
+- 问题
+  - Windows环境
+
+  根据错误提示，缺少包则在主文件（py文件）中导入相应的包
+
+  - Linux环境
+
+  根据错误提示，如果提示dist-info文件夹中缺少pycache，可直接删除该文件夹。（当前暂时认为dist-info文件夹是pip的缓存包文件，pip安装时会优先使用缓存）
+
+
+
+# 系统信息获取
+
+~~~python
+import socket, getpass, os
+
+# 获取当前系统主机名
+host_name = socket.gethostname()
+# 获取当前系统用户名
+user_name = getpass.getuser()
+# 获取当前系统用户目录
+user_home = os.path.expanduser('~')
+~~~
 

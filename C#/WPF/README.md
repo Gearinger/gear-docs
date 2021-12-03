@@ -1,8 +1,8 @@
 # WPF相关记录
 
-## 常用示例
+## 常用控件的使用示例
 
-### devexpress中GridControl的使用（表格）
+### devexpress中GridControl（表格）
 
 ~~~xaml
  <dxg:GridControl  
@@ -88,7 +88,7 @@ ItemsControl是ListBox、ListView、TreeView、DataGrid等其他控件的父类�
 
 
 
-## DataGrid的使用
+## DataGrid
 
 DataGrid 可使用 DataTable 作为 ItemSource
 
@@ -170,10 +170,13 @@ public partial class App : Application
 }
 ```
 
-# 控件库
+## 控件库
 
-## 一、DevExpress
+### 1、DevExpress
 
-## 二、Aduskin
+基本包含常用的所有控件和基础类库
+
+### 2、Aduskin
 
 简约好看，2020年7月29日发布
+
