@@ -34,7 +34,7 @@ C:\Users\用户名\AppData\Roaming\Typora\picgo\win64>picgo install gitee-upload
     "picgo-plugin-super-prefix": true
   },
   "picgo-plugin-super-prefix": {
-    "fileFormat": "YYYYMMDD-HHmm"
+    "fileFormat": "YYYYMMDD-HHmmss"
   },
   "picgo-plugin-gitee-uploader": {
     "lastSync": "2021-10-09 04:46:55"

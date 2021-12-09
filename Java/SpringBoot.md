@@ -1,0 +1,1009 @@
+## 教程
+
+### 1、简单示例
+
+#### （1）项目创建
+
+![image-20211208194310591](https://gitee.com/gearinger/gear-markdown-pictures/raw/picgo/20211208-194855.png)
+
+#### （2）全局依赖
+
+~~~xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
+</dependencies>
+~~~
+
+#### （3）组织结构
+
+![image-20211208194923516](https://gitee.com/gearinger/gear-markdown-pictures/raw/picgo/20211208-194925.png)
+
+> 1、`springboot2-demo/pom.xml ` 配置所有全局依赖；
+>
+> 2、config 文件夹内定义swagger2、全局异常捕捉、返回结果包装、跨域处理；
+
+#### （4）Swagger2
+
+- 配置依赖
+
+> `springboot2-demo/config/pom.xml` 
+
+```xml
+<!-- swagger2-->
+<dependencies>
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>2.9.2</version>
+    </dependency>
+    <!-- swagger2-UI-->
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>2.9.2</version>
+    </dependency>
+    <dependency>
+        <groupId>com.github.xiaoymin</groupId>
+        <artifactId>swagger-bootstrap-ui</artifactId>
+        <version>1.9.6</version>
+    </dependency>
+</dependencies>
+```
+
+- 注入配置组件
+
+```java
+/**
+ * Swagger的配置
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig extends WebMvcConfigurationSupport {
+    @Bean
+    public Docket createRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                .paths(PathSelectors.any())
+                .build();
+    }
+
+    @Bean
+    UiConfiguration uiConfig() {
+        return UiConfigurationBuilder.builder()
+                .deepLinking(true)
+                .displayOperationId(false)
+                .defaultModelsExpandDepth(1)
+                .defaultModelExpandDepth(1)
+                .defaultModelRendering(ModelRendering.EXAMPLE)
+                .displayRequestDuration(false)
+                .docExpansion(DocExpansion.NONE)
+                .filter(false)
+                .maxDisplayedTags(null)
+                .operationsSorter(OperationsSorter.ALPHA)
+                .showExtensions(false)
+                .tagsSorter(TagsSorter.ALPHA)
+                .supportedSubmitMethods(UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS)
+                .validatorUrl(null)
+                .build();
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("gear api")
+                .description("gear api description")
+                .termsOfServiceUrl("http://127.0.0.1:8009/")
+                .contact(new Contact("gear","http://127.0.0.1","2661569419@qq.com"))
+                .version("1.0")
+                .build();
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+}
+```
+
+#### （5）返回结果包装
+
+~~~java
+/**
+ * 返回结果定义
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+public class ResultBody<T> {
+    /**
+     * 响应代码
+     */
+    private String code;
+
+    /**
+     * 响应消息
+     */
+    private String message;
+
+    /**
+     * 响应结果
+     */
+    private T result;
+
+    public ResultBody() {
+    }
+
+    /**
+     * 结果
+     *
+     * @param errorInfo 错误信息
+     * @return {@link  }
+     */
+    public ResultBody(BaseErrorInfoInterface errorInfo) {
+        this.code = errorInfo.getResultCode();
+        this.message = errorInfo.getResultMsg();
+    }
+
+    /**
+     * 成功
+     *
+     * @return {@link ResultBody }
+     */
+    public static <T> ResultBody<T> success() {
+        return success(null);
+    }
+
+    /**
+     * 成功
+     *
+     * @param data 数据
+     * @return {@link ResultBody }
+     */
+    public static <T> ResultBody<T> success(T data) {
+        ResultBody<T> rb = new ResultBody<T>();
+        rb.setCode(CommonEnum.SUCCESS.getResultCode());
+        rb.setMessage(CommonEnum.SUCCESS.getResultMsg());
+        rb.setResult(data);
+        return rb;
+    }
+
+    /**
+     * 失败
+     */
+    public static <T> ResultBody<T> error(BaseErrorInfoInterface errorInfo) {
+        ResultBody<T> rb = new ResultBody<T>();
+        rb.setCode(errorInfo.getResultCode());
+        rb.setMessage(errorInfo.getResultMsg());
+        rb.setResult(null);
+        return rb;
+    }
+
+    /**
+     * 失败
+     */
+    public static <T> ResultBody<T> error(String code, String message) {
+        ResultBody<T> rb = new ResultBody<T>();
+        rb.setCode(code);
+        rb.setMessage(message);
+        rb.setResult(null);
+        return rb;
+    }
+
+    /**
+     * 失败
+     */
+    public static <T> ResultBody<T> error(String message) {
+        ResultBody<T> rb = new ResultBody<T>();
+        rb.setCode("-1");
+        rb.setMessage(message);
+        rb.setResult(null);
+        return rb;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getResult() {
+        return result;
+    }
+
+    public void setResult(T result) {
+        this.result = result;
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
+    }
+
+}
+~~~
+
+#### （6）全局异常
+
+> 定义接口 BaseErrorInfoInterface
+
+~~~java
+/**
+ * 基本错误信息界面
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+public interface BaseErrorInfoInterface {
+    /**
+     * 获取的结果状态码
+     *
+     * @return {@link String }
+     */
+    String getResultCode();
+
+    /**
+     * 获取结果信息
+     *
+     * @return {@link String }
+     */
+    String getResultMsg();
+}
+~~~
+
+> 包装 RuntimeException
+
+~~~java
+/**
+ * 业务异常
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+public class BizException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 错误码
+     */
+    protected String errorCode;
+    /**
+     * 错误信息
+     */
+    protected String errorMsg;
+
+    public BizException() {
+        super();
+    }
+
+    public BizException(BaseErrorInfoInterface errorInfoInterface) {
+        super(errorInfoInterface.getResultCode());
+        this.errorCode = errorInfoInterface.getResultCode();
+        this.errorMsg = errorInfoInterface.getResultMsg();
+    }
+
+    public BizException(BaseErrorInfoInterface errorInfoInterface, Throwable cause) {
+        super(errorInfoInterface.getResultCode(), cause);
+        this.errorCode = errorInfoInterface.getResultCode();
+        this.errorMsg = errorInfoInterface.getResultMsg();
+    }
+
+    public BizException(String errorMsg) {
+        super(errorMsg);
+        this.errorMsg = errorMsg;
+    }
+
+    public BizException(String errorCode, String errorMsg) {
+        super(errorCode);
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+    }
+
+    public BizException(String errorCode, String errorMsg, Throwable cause) {
+        super(errorCode, cause);
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+    }
+
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
+    @Override
+    public String getMessage() {
+        return errorMsg;
+    }
+
+    @Override
+    public Throwable fillInStackTrace() {
+        return this;
+    }
+
+}
+~~~
+
+> 定义异常枚举
+
+```java
+/**
+ * 常见的枚举
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+public enum CommonEnum implements BaseErrorInfoInterface {
+    // 数据操作错误定义
+    SUCCESS("200", "成功!"),
+    BODY_NOT_MATCH("400", "请求的数据格式不符!"),
+    SIGNATURE_NOT_MATCH("401", "请求的数字签名不匹配!"),
+    NOT_FOUND("404", "未找到该资源!"),
+    INTERNAL_SERVER_ERROR("500", "服务器内部错误!"),
+    SERVER_BUSY("503", "服务器正忙，请稍后再试!");
+
+    /**
+     * 错误码
+     */
+    private final String resultCode;
+
+    /**
+     * 错误描述
+     */
+    private final String resultMsg;
+
+    CommonEnum(String resultCode, String resultMsg) {
+        this.resultCode = resultCode;
+        this.resultMsg = resultMsg;
+    }
+
+    @Override
+    public String getResultCode() {
+        return resultCode;
+    }
+
+    @Override
+    public String getResultMsg() {
+        return resultMsg;
+    }
+
+}
+```
+
+> 全局异常处理
+
+~~~java
+/**
+ * 全局异常处理
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    /**
+     * 处理自定义的业务异常
+     *
+     * @param req 要求的事情
+     * @param e   e
+     * @return {@link}
+     */
+    @ExceptionHandler(value = BizException.class)
+    @ResponseBody
+    public ResultBody bizExceptionHandler(HttpServletRequest req, BizException e) {
+        logger.error("发生业务异常！原因是：{}", e.getErrorMsg());
+        return ResultBody.error(e.getErrorCode(), e.getErrorMsg());
+    }
+
+    /**
+     * 处理空指针的异常
+     *
+     * @param req 要求的事情
+     * @param e   e
+     * @return {@link}
+     */
+    @ExceptionHandler(value = NullPointerException.class)
+    @ResponseBody
+    public ResultBody exceptionHandler(HttpServletRequest req, NullPointerException e) {
+        logger.error("发生空指针异常！原因是:", e);
+        return ResultBody.error(CommonEnum.BODY_NOT_MATCH);
+    }
+
+
+    /**
+     * 处理其他异常
+     *
+     * @param req 要求的事情
+     * @param e   e
+     * @return {@link}
+     */
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public ResultBody exceptionHandler(HttpServletRequest req, Exception e) {
+        logger.error("未知异常！原因是:", e);
+        return ResultBody.error(CommonEnum.INTERNAL_SERVER_ERROR);
+    }
+}
+~~~
+
+#### （7）全局跨域处理
+
+```java
+/**
+ * 跨域处理（暂全部放行）
+ * 安全的方式应采用对单个controller使用@CrossOrigin注解
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+@Configuration
+public class Cors {
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowCredentials(true)
+                        .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH")
+                        .maxAge(3600);
+            }
+        };
+    }
+}
+```
+
+#### （8）新建模块
+
+![image-20211208194947575](https://gitee.com/gearinger/gear-markdown-pictures/raw/picgo/20211208-194949.png)
+
+> controller 必须使用@Api注解，因当前swagger配置的是用该注解扫描
+
+~~~java
+/**
+ * 测试控制器
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+@Api(tags = "test")
+@RestController
+@RequestMapping("/test")
+public class TestController {
+    /**
+     * 测试
+     *
+     * @return {@link String }
+     */
+    @RequestMapping(value = "/test1", method = RequestMethod.GET)
+    public String test() {
+        return "~~~~~~~~~~~~~~";
+    }
+
+    @RequestMapping(value = "/test2", method = RequestMethod.GET)
+    public ResultBody testException() throws Exception {
+        return ResultBody.success("Test Wrong!!!");
+    }
+
+    @GetMapping("/test3")
+    public boolean testException3() {
+        System.out.println("开始新增...");
+        //如果姓名为空就手动抛出一个自定义的异常！
+        throw new BizException("-1", "用户姓名不能为空！");
+    }
+
+    @GetMapping("/test4")
+    public boolean testException4() {
+        System.out.println("开始更新...");
+        //这里故意造成一个空指针的异常，并且不进行处理
+        String str = null;
+        str.equals("111");
+        return true;
+    }
+
+    @GetMapping("/test5")
+    public boolean testException5() {
+        System.out.println("开始删除...");
+        //这里故意造成一个异常，并且不进行处理
+        Integer.parseInt("abc123");
+        return true;
+    }
+}
+~~~
+
+> 新建模块启动程序需指定扫描组件的位置 scanBasePackages，使config模块被扫描到；
+
+~~~java
+/**
+ * 测试演示应用程序
+ *
+ * @author guoyd
+ * @version 1.0.0
+ * @date 2021/01/25
+ */
+@SpringBootApplication(scanBasePackages = {"com.gear.config", "com.gear.testdemo"})
+@EnableSwagger2
+public class TestDemoApplication {
+
+    @Autowired
+    ServerProperties serverProperties;
+
+    public static void main(String[] args) {
+        SpringApplication.run(TestDemoApplication.class, args);
+        System.out.println("----------程序开始运行----------");
+    }
+}
+~~~
+
+### 2、自定义配置
+
+#### （1）@ConfigurationProperties 绑定配置+ @Configration 注入容器
+
+~~~JAVA
+// 标记使之被扫描到，将当前class转为bean放置到容器中，以便后续获取使用（可换成@Component）
+@Configration
+// 与配置文件绑定
+@ConfigurationProperties(prefix="test")
+// lombok 添加get、set方法
+@Data
+public class TestConfig{
+    private String name;
+}
+~~~
+
+#### （2）@Value 绑定单个属性的配置+ @Configration 注入容器
+
+~~~JAVA
+// 标记使之被扫描到，将当前class转为bean放置到容器中，以便后续获取使用（可换成@Component）
+@Configration
+public class TestConfig{
+    @Value("${test.testConfig.name}")
+    private String name;
+}
+~~~
+
+#### （3）@ConfigurationProperties 绑定配置+ @EnableConfigurationProperties 注入容器
+
+~~~JAVA
+// 与配置文件绑定
+@ConfigurationProperties(prefix="test")
+// lombok 添加get、set方法
+@Data
+public class TestConfig{
+    private String name;
+}
+
+// 标记使之被扫描到，将当前class转为bean放置到容器中，以便后续获取使用（可换成@Component）
+@Configration
+// 实例化当前类的同时，将 TestConfig 注入容器供后续获取使用
+@EnableConfigurationProperties(TestConfig.Class)
+public class Test2{
+    ……
+}
+~~~
+
+#### （4）@ConfigurationProperties 绑定配置+ @Bean 注入容器
+
+~~~JAVA
+// 与配置文件绑定
+@ConfigurationProperties(prefix="test")
+// lombok 添加get、set方法
+@Data
+public class TestConfig{
+    private String name;
+}
+
+// 标记使之被扫描到，将当前class转为bean放置到容器中，以便后续获取使用（可换成@Component）
+@Configration
+public class Test2{
+    // 将 TestConfig 注入容器
+    @Bean
+    public TestConfig testConfig(){
+        return new TestConfig()
+    }
+}
+~~~
+
+
+
+### 3、常用注解
+
+#### @SpringBootApplication
+
+> @SpringBootApplication 注解等价于以默认属性使用 @Configuration ， @EnableAutoConfiguration 和 @ComponentScan 
+
+#### @Configration
+
+> 将当前类标记为一个组件，可被@ComponentScan扫描到注入容器中
+
+#### @Import
+
+> 当前类被扫描到时，先注入目标类
+>
+> ~~~JAVA
+> @Import(Demo.Class)
+> public class Test{
+>     
+> }
+> ~~~
+
+#### @AutoWired/@Resource
+
+> @Resource的作用相当于@Autowired，只不过@Autowired按byType自动注入，而@Resource默认按 byName自动注入
+
+#### @Qualifier
+
+> 当存在多个同类型bean时，配合@AutoWired，指明获取特定bean名称的实例
+>
+> ~~~JAVA
+> @Component
+> public class FooService {
+>     @Autowired
+>     @Qualifier("fooFormatter")
+>     private Formatter formatter;
+> 
+>     //todo 
+> }
+> ~~~
+
+#### @Component、@Configration、@Service、@Controller、@RestController
+
+> 标记为可被被扫描的控件
+
+### 4、请求处理
+
+### 5、拦截器
+
+#### （1）自定义实现 HandlerInterceptor
+
+~~~JAVA
+public class AdminInterceptor implements  HandlerInterceptor {
+
+    /**
+     * 在请求处理之前进行调用（Controller方法调用之前）
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        try {
+            //统一拦截（查询当前session是否存在user）(这里user会在每次登陆成功后，写入session)
+            User user=(User)request.getSession().getAttribute("USER");
+            if(user!=null){
+                return true;	// 放行
+            }
+            response.sendRedirect(request.getContextPath()+"你的登陆页地址");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;	// 拦截
+    }
+
+    /**
+     * 请求处理之后进行调用，但是在视图被渲染之前（Controller方法调用之后）
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
+        
+    }
+
+    /**
+     * 在整个请求结束之后被调用，也就是在DispatcherServlet 渲染了对应的视图之后执行（主要是用于进行资源清理工作）
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        
+    }
+
+}
+~~~
+
+#### （2）注册自定义的拦截器
+
+```JAVA
+@Configuration
+public class LoginConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 注册TestInterceptor拦截器
+        InterceptorRegistration registration = registry.addInterceptor(new AdminInterceptor());
+
+        // 拦截所有路径
+        registration.addPathPatterns("/**");                      
+
+        // 添加放行的路径
+        registration.excludePathPatterns(                         
+            "你的登陆路径",            //登录
+            "/**/*.html",            //html静态资源
+            "/**/*.js",              //js静态资源
+            "/**/*.css",             //css静态资源
+            "/**/*.woff",
+            "/**/*.ttf"
+        );    
+    }
+}
+```
+
+### 6、异常处理
+
+### 7、单元测试
+
+#### （1）注解
+
+| 注解                                     | 修饰对象        | 作用                                                         |
+| ---------------------------------------- | --------------- | ------------------------------------------------------------ |
+| @SpringBootTest                          | class           | 标识为测试用例                                               |
+| @DisplayName                             | class、方法函数 | 别名                                                         |
+| @Test                                    | 方法函数        | 测试方法                                                     |
+| @Disable                                 | 方法函数        | 使测试方法不运行                                             |
+| @TimeOut(value=1, unit=TimeUnit.Seconds) | 方法函数        | 标定测试方法的限制时间1s，超时则失败报错                     |
+| @RepeatedTest(5)                         | 方法函数        | 运行五次该测试方法                                           |
+| @BeforeAll                               | 方法函数        | 所有测试方法运行前，先运行此方法（一次）                     |
+| @BeforeEach                              | 方法函数        | 每个测试方法运行前，都运行此方法（运行次数等于测试方法次数） |
+| @AfterAll                                | 方法函数        | 所有测试方法运行后，运行此方法（一次）                       |
+| @AfterEach                               | 方法函数        | 每个测试方法运行前，都运行此方法（运行次数等于测试方法次数） |
+
+#### （2）断言
+
+| 方法                                  | 作用                                                     |
+| ------------------------------------- | -------------------------------------------------------- |
+| assertArrayEquals(expecteds, actuals) | 查看两个数组是否相等。                                   |
+| assertEquals(expected, actual)        | 查看两个对象是否相等。类似于字符串比较使用的equals()方法 |
+| assertNotEquals(first, second)        | 查看两个对象是否不相等。                                 |
+| assertNull(object)                    | 查看对象是否为空。                                       |
+| assertNotNull(object)                 | 查看对象是否不为空。                                     |
+| assertSame(expected, actual)          | 查看两个对象的引用是否相等。类似于使用“==”比较两个对象   |
+| assertNotSame(unexpected, actual)     | 查看两个对象的引用是否不相等。类似于使用“!=”比较两个对象 |
+| assertTrue(condition)                 | 查看运行结果是否为true。                                 |
+| assertFalse(condition)                | 查看运行结果是否为false。                                |
+| assertThat(actual, matcher)           | 查看实际值是否满足指定的条件                             |
+| fail()                                | 让测试失败                                               |
+
+#### （3）前置条件
+
+~~~JAVA
+@DisplayName("测试")
+@Test
+void Test(){
+    assumptions.assumpFalse(false);	// false 满足条件，继续执行后面的内容
+    assumptions.assumpTrue(false);	// false 不满足条件，不执行后面的内容，当前测试方法将被标记为跳过测试
+    ...
+}
+
+~~~
+
+
+
+#### （4）嵌套测试
+
+~~~JAVA
+// 外层声明的变量，会先在外层跑完所有测试，再进去内层跑测试。
+// 所以,外层修改变量值，会影响内层，但是内层修改变量值不会影响外层
+@SpringbootTest
+@DisplayName("测试")
+class Test{
+
+    // 变量
+    Stack<Object> stack;
+
+    @Test
+    void CheckNull(){
+        // 内层对 stack 的操作不影响外层，这里 stack 测试结果是null。但是外层对 stack 的操作会影响内层的调用
+        assertNotNull(stack);
+    }
+
+    @Nested
+    @DisplayName("测试2")
+    class Test2{
+        @BeforeAll
+        void Init(){
+            // 不影响外层的测试方法
+            stack = new Stack<Object>();
+        }
+    }
+}
+~~~
+
+
+
+#### （5）参数化测试
+
+
+
+### 8、监控
+
+### 9、常用Jar包整合
+
+## 尚硅谷SpringBoot2文档
+
+[SpringBoot2核心技术与响应式编程 · 语雀 (yuque.com)](https://www.yuque.com/atguigu/springboot)
+
+## Issue
+
+### 1、中文乱码问题
+
+- 原因
+
+项目中引入了`WebMvcConfigurationSupport`。
+
+由于添加Swagger2的配置引入了`WebMvcConfigurationSupport`
+
+~~~java
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig extends WebMvcConfigurationSupport {
+    ……
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        ……
+    }
+}
+~~~
+
+- 解决方式
+
+删除addResourceHandlers方法的重写，修改为
+
+~~~java
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+    ……
+}
+~~~
+
+
+
+### 2、跨域配置正则问题
+
+- 原因
+
+跨域配置错误
+
+错误示例：`.allowedOrigin("*")`
+
+- 解决方式
+
+正确示例：`.allowedOriginPatterns("*")`
+
+```java
+@Configuration
+public class Cors {
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*")
+                        .allowCredentials(true)
+                        .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH")
+                        .maxAge(3600);
+            }
+        };
+    }
+}
+```
+
+
+
+### 3、引入SwaggerBootstrapUI后，Swagger界面不显示的问题
+
+- 原因
+
+由于之前设置了启用增强功能
+
+![image-20210220135908055](https://gitee.com/gearinger/gear-markdown-pictures/raw/picgo/20211206-153614.png)
+
+- 解决方式
+
+  - 方式一
+
+  Application的类上添加`@EnableSwaggerBootstrapUI`注解。
+
+  ~~~java
+  @SpringBootApplication
+  @EnableSwagger2
+  @EnableSwaggerBootstrapUI
+  public class DemoApplication {
+      public static void main(String[] args) {
+          SpringApplication.run(DemoApplication.class, args);
+      }
+  }
+  ~~~
+
+  - 方式二
+
+  找到本地Maven仓库的SwaggerBootstrapUI包进行删除，再重新拉取。
+
+### 4、spring.jackson.date-format 失效原因及解决方式
+
+#### 问题
+
+`spring.jackson.date-format`失效，导致序列化获取的时间是时间戳格式，不是常规使用的格式化的`json`
+
+配置文件内容：
+
+```yaml
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+```
+
+#### 原因
+
+在项目中继承了 `WebMvcConfigurationSupport `这个类。一般是因为`swagger`的`bean`配置中有继承，如下：
+
+~~~java
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig implements WebMvcConfigurationSupport {
+    @Bean
+    public Docket createRestApi() {
+        ...
+~~~
+
+#### 解决方式
+
+修改为实现`WebMvcConfigurer`接口，如下：
+
+~~~java
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig implements WebMvcConfigurer {
+    @Bean
+    public Docket createRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                ...
+~~~
+
