@@ -966,19 +966,19 @@ management:
       show-details: ALWAYS
 ~~~
 
-### 9、常用Jar包整合
+## 常用Jar包整合
 
-#### （1）PostgreSQL
+### PostgreSQL
 
-#### （2）Mybatis-Plus
+### Mybatis-Plus
 
-#### （3）Swagger2
+### Swagger2
 
-#### （4）Redis 缓存
+### Redis 缓存
 
-#### （5）ElasticSearch
+### ElasticSearch
 
-#### （6）GeoTools
+### GeoTools
 
 ## 尚硅谷SpringBoot2文档
 
