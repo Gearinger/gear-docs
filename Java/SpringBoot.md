@@ -817,8 +817,6 @@ void Test(){
 
 ~~~
 
-
-
 #### （4）嵌套测试
 
 ~~~JAVA
@@ -849,15 +847,138 @@ class Test{
 }
 ~~~
 
-
-
 #### （5）参数化测试
 
+@ValueSource()
 
+~~~JAVA
+@Test
+// 针对每个元素，都执行一遍测试方法
+@VaueSource(ints = {1,2,3,4,5})
+void Test(int i){
+	system.out.println(i);
+}
+~~~
+
+@MethodSource
+
+~~~JAVA
+@Test
+// 针对每个元素，都执行一遍测试方法
+@MethodSource("Method")
+void Test(string str){
+	system.out.println(str);
+}
+
+Static Stream<String> Method(){
+	return Stream.of("A","B","C")
+}
+~~~
 
 ### 8、监控
 
+#### （1）Spring Boot Actuator
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+~~~yaml
+management:
+  endpoints:
+    enabled-by-default: true
+#启动所有端点
+  web:
+    exposure:
+      include: *
+#自定义管理端点路径
+#management.endpoints.web.base-path=/manage
+~~~
+
+#### （2）可视化界面 Spring Boot Admin Server
+
+- 创建新的项目用于服务端监控
+
+~~~XML
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-starter-server</artifactId>
+    <version>2.1.0</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+~~~
+
+~~~JAVA
+@SpringBootApplication
+@EnableAdminServer	启动监控
+public class AdminServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run( AdminServerApplication.class, args );
+    }
+
+}
+~~~
+
+~~~YAML
+spring:
+  application:
+    name: admin-server
+server:
+  port: 8888
+~~~
+
+- 配置被监控的客户端
+
+~~~xml
+<dependency>
+    <groupId>de.codecentric</groupId>
+    <artifactId>spring-boot-admin-starter-client</artifactId>
+    <version>2.1.0</version>
+</dependency>
+~~~
+
+~~~YAML
+spring:
+  application:
+    name: admin-client
+  boot:
+    admin:
+      client:
+        url: http://localhost:8888
+server:
+  port: 8080
+
+management:
+  endpoints:
+    # 放行所有web接口
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+~~~
+
 ### 9、常用Jar包整合
+
+#### （1）PostgreSQL
+
+#### （2）Mybatis-Plus
+
+#### （3）Swagger2
+
+#### （4）Redis 缓存
+
+#### （5）ElasticSearch
+
+#### （6）GeoTools
 
 ## 尚硅谷SpringBoot2文档
 
@@ -898,8 +1019,6 @@ public class SwaggerConfig {
 }
 ~~~
 
-
-
 ### 2、跨域配置正则问题
 
 - 原因
@@ -931,8 +1050,6 @@ public class Cors {
     }
 }
 ```
-
-
 
 ### 3、引入SwaggerBootstrapUI后，Swagger界面不显示的问题
 
