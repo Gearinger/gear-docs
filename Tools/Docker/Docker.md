@@ -108,7 +108,11 @@ docker network --help
 # 列出所有网络
 docker network ls
 
-docker network create test_net
+# 创建 bridge 模式、子网为192.168.0.0/16、网关为192.168.0.1 的 docker网络
+docker network create --driver bridge --subnet 192.168.0.0/16 --gateway 192.168.0.1 testnet
+
+# 使用自定义的网络运行容器
+docker run -P -net testnet --name "mysql" -d mysql
 ~~~
 
 ## 常用命令
@@ -126,7 +130,7 @@ docker run -d -v 宿主机路径:容器内路径 -p 宿主机端口:容器端口
 
 ~~~
 
-### 容器
+- 容器
 
 ~~~sh
 # 查看容器
@@ -145,7 +149,7 @@ docker stop
 docker rm
 ~~~
 
-### 镜像
+- 镜像
 
 ~~~sh
 # 查看容器相关命令
@@ -164,7 +168,7 @@ docker images -q
 docker rmi
 ~~~
 
-### 其他
+- 其他
 
 ~~~sh
 # 从dockerfile构建镜像
