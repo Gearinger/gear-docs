@@ -1,6 +1,22 @@
 ## Git的简单使用
 
-### 一、基本常识
+### 一、本地仓库创建
+
+~~~sh
+# 创建仓库
+git init
+
+# 创建裸仓库（用于远程服务器，其中没有当前版本的文件）
+git init --bare
+~~~
+
+> 服务器端需要使用裸仓库。裸仓库在服务器上不能操作。普通仓库可在服务器端操作，容易产生冲突。
+>
+> 如果使用普通仓库，客户端进行推送的时候会报错，需要在服务器端执行以下命令：
+>
+> ~~~sh
+> git config receive.denyCurrentBranch warn
+> ~~~
 
 ~~~sh
 # clone远程仓库（最后的文件可以是".git"也可以是"/.git"
@@ -10,7 +26,7 @@ git clone ssh://用户@ip:端口/目录
 git clone ssh://root@182.61.27.134:23333/home/git/Django.git
 ~~~
 
-服务器端需要使用裸仓库，普通仓库对于多人提交存在问题（具体内容忘了）。
+服务器端需要使用裸仓库。裸仓库在服务器上不能操作。普通仓库可在服务器端操作，容易产生冲突。
 
 ~~~sh
 # 普通仓库
@@ -25,6 +41,37 @@ git init --bare
 ~~~sh
 git config receive.denyCurrentBranch warn
 ~~~
+
+### 二、远程仓库使用
+
+#### （1）克隆远程仓库
+
+不存在本地仓库，需要从远程仓库获取内容
+
+~~~sh
+# clone远程仓库（最后的文件可以是".git"也可以是"/.git"
+git clone ssh://用户@ip:端口/目录
+
+# 示例
+git clone ssh://root@182.61.27.134:23333/home/git/Django.git
+~~~
+
+#### （2）推送到远程仓库
+
+存在本地仓库，远程仓库为空，需要将本地内容覆盖到远程仓库
+
+~~~sh
+# 添加远程仓库
+git remote add origin ssh://root@182.61.27.134:23333/home/git/Django.git
+
+# 提交本地修改
+git add .
+git commit -m "init message"
+# 推送到远程仓库
+git push -u origin master
+~~~
+
+
 
 ### 二、基本命令
 
