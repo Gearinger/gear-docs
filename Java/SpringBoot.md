@@ -1,3 +1,9 @@
+## 环境配置
+
+### Maven
+
+### JDK
+
 ## 教程
 
 ### 1、简单示例
@@ -654,15 +660,15 @@ public class Test2{
 
 ### 3、常用注解
 
-#### @SpringBootApplication
+- @SpringBootApplication
 
 > @SpringBootApplication 注解等价于以默认属性使用 @Configuration ， @EnableAutoConfiguration 和 @ComponentScan 
 
-#### @Configration
+- @Configration
 
 > 将当前类标记为一个组件，可被@ComponentScan扫描到注入容器中
 
-#### @Import
+- @Import
 
 > 当前类被扫描到时，先注入目标类
 >
@@ -673,11 +679,11 @@ public class Test2{
 > }
 > ~~~
 
-#### @AutoWired/@Resource
+- @AutoWired/@Resource
 
 > @Resource的作用相当于@Autowired，只不过@Autowired按byType自动注入，而@Resource默认按 byName自动注入
 
-#### @Qualifier
+- @Qualifier
 
 > 当存在多个同类型bean时，配合@AutoWired，指明获取特定bean名称的实例
 >
@@ -687,18 +693,18 @@ public class Test2{
 >     @Autowired
 >     @Qualifier("fooFormatter")
 >     private Formatter formatter;
-> 
+>
 >     //todo 
 > }
 > ~~~
 
-#### @Component、@Configration、@Service、@Controller、@RestController
+- @Component、@Configration、@Service、@Controller、@RestController
 
 > 标记为可被被扫描的控件
 
 ### 4、请求处理
 
-### 5、拦截器
+### 5、拦截器（HandlerInterceptor）
 
 #### （1）自定义实现 HandlerInterceptor
 
@@ -769,40 +775,87 @@ public class LoginConfig implements WebMvcConfigurer {
 }
 ```
 
-### 6、异常处理
+### 6、过滤器（Filter）
+
+实现javax.Servlet.Filter接口，并重写接口中定义的三个方法
+
+~~~java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+// 必须添加注解，springmvc通过web.xml配置
+@Component
+public class TimeFilter implements Filter {
+  private static final Logger LOG = LoggerFactory.getLogger(TimeFilter.class);
+
+  @Override
+  public void init(FilterConfig filterConfig) throws ServletException {
+    LOG.info("初始化过滤器：{}", filterConfig.getFilterName());
+  }
+
+  @Override
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    LOG.info("start to doFilter");
+    long startTime = System.currentTimeMillis();
+    chain.doFilter(request, response);
+    long endTime = System.currentTimeMillis();
+    LOG.info("the request of {} consumes {}ms.", getUrlFrom(request), (endTime - startTime));
+    LOG.info("end to doFilter");
+  }
+
+  @Override
+  public void destroy() {
+    LOG.info("销毁过滤器");
+  }
+
+  private String getUrlFrom(ServletRequest servletRequest){
+    if (servletRequest instanceof HttpServletRequest){
+      return ((HttpServletRequest) servletRequest).getRequestURL().toString();
+    }
+    return "";
+  }
+}
+~~~
+
+
 
 ### 7、单元测试
 
 #### （1）注解
 
-| 注解                                     | 修饰对象        | 作用                                                         |
-| ---------------------------------------- | --------------- | ------------------------------------------------------------ |
-| @SpringBootTest                          | class           | 标识为测试用例                                               |
-| @DisplayName                             | class、方法函数 | 别名                                                         |
-| @Test                                    | 方法函数        | 测试方法                                                     |
-| @Disable                                 | 方法函数        | 使测试方法不运行                                             |
-| @TimeOut(value=1, unit=TimeUnit.Seconds) | 方法函数        | 标定测试方法的限制时间1s，超时则失败报错                     |
-| @RepeatedTest(5)                         | 方法函数        | 运行五次该测试方法                                           |
-| @BeforeAll                               | 方法函数        | 所有测试方法运行前，先运行此方法（一次）                     |
-| @BeforeEach                              | 方法函数        | 每个测试方法运行前，都运行此方法（运行次数等于测试方法次数） |
-| @AfterAll                                | 方法函数        | 所有测试方法运行后，运行此方法（一次）                       |
-| @AfterEach                               | 方法函数        | 每个测试方法运行前，都运行此方法（运行次数等于测试方法次数） |
+| 注解                                       | 修饰对象       | 作用                             |
+| ---------------------------------------- | ---------- | ------------------------------ |
+| @SpringBootTest                          | class      | 标识为测试用例                        |
+| @DisplayName                             | class、方法函数 | 别名                             |
+| @Test                                    | 方法函数       | 测试方法                           |
+| @Disable                                 | 方法函数       | 使测试方法不运行                       |
+| @TimeOut(value=1, unit=TimeUnit.Seconds) | 方法函数       | 标定测试方法的限制时间1s，超时则失败报错          |
+| @RepeatedTest(5)                         | 方法函数       | 运行五次该测试方法                      |
+| @BeforeAll                               | 方法函数       | 所有测试方法运行前，先运行此方法（一次）           |
+| @BeforeEach                              | 方法函数       | 每个测试方法运行前，都运行此方法（运行次数等于测试方法次数） |
+| @AfterAll                                | 方法函数       | 所有测试方法运行后，运行此方法（一次）            |
+| @AfterEach                               | 方法函数       | 每个测试方法运行前，都运行此方法（运行次数等于测试方法次数） |
 
 #### （2）断言
 
-| 方法                                  | 作用                                                     |
-| ------------------------------------- | -------------------------------------------------------- |
-| assertArrayEquals(expecteds, actuals) | 查看两个数组是否相等。                                   |
+| 方法                                    | 作用                               |
+| ------------------------------------- | -------------------------------- |
+| assertArrayEquals(expecteds, actuals) | 查看两个数组是否相等。                      |
 | assertEquals(expected, actual)        | 查看两个对象是否相等。类似于字符串比较使用的equals()方法 |
-| assertNotEquals(first, second)        | 查看两个对象是否不相等。                                 |
-| assertNull(object)                    | 查看对象是否为空。                                       |
-| assertNotNull(object)                 | 查看对象是否不为空。                                     |
-| assertSame(expected, actual)          | 查看两个对象的引用是否相等。类似于使用“==”比较两个对象   |
-| assertNotSame(unexpected, actual)     | 查看两个对象的引用是否不相等。类似于使用“!=”比较两个对象 |
-| assertTrue(condition)                 | 查看运行结果是否为true。                                 |
-| assertFalse(condition)                | 查看运行结果是否为false。                                |
-| assertThat(actual, matcher)           | 查看实际值是否满足指定的条件                             |
-| fail()                                | 让测试失败                                               |
+| assertNotEquals(first, second)        | 查看两个对象是否不相等。                     |
+| assertNull(object)                    | 查看对象是否为空。                        |
+| assertNotNull(object)                 | 查看对象是否不为空。                       |
+| assertSame(expected, actual)          | 查看两个对象的引用是否相等。类似于使用“==”比较两个对象    |
+| assertNotSame(unexpected, actual)     | 查看两个对象的引用是否不相等。类似于使用“!=”比较两个对象   |
+| assertTrue(condition)                 | 查看运行结果是否为true。                   |
+| assertFalse(condition)                | 查看运行结果是否为false。                  |
+| assertThat(actual, matcher)           | 查看实际值是否满足指定的条件                   |
+| fail()                                | 让测试失败                            |
 
 #### （3）前置条件
 
@@ -984,6 +1037,40 @@ management:
 
 [SpringBoot2核心技术与响应式编程 · 语雀 (yuque.com)](https://www.yuque.com/atguigu/springboot)
 
+## 知识点
+
+### 1、过滤器和拦截器的主要区别
+
+过滤器主要作用
+
+> 1) Authentication Filters, 即用户访问权限过滤
+>
+> 2) Logging and Auditing Filters, 日志过滤，可以记录特殊用户的特殊请求的记录等
+>
+> 3) Image conversion Filters
+>
+> 4) Data compression Filters
+>
+> 5) Encryption Filters
+>
+> 6) Tokenizing Filters
+>
+> 7) Filters that trigger resource access events
+>
+> 8) XSL/T filters
+>
+> 9) Mime-type chain Filter
+
+拦截器主要作用
+
+> 1) **日志记录：**记录请求信息的日志，以便进行信息监控、信息统计、计算PV（Page View）等
+>
+> 2) **权限检查：**如登录检测，进入处理器检测检测是否登录
+>
+> 3) **性能监控：**通过拦截器在进入处理器之前记录开始时间，在处理完后记录结束时间，从而得到该请求的处理时间。（反向代理，如apache也可以自动记录）；
+>
+> 4) **通用行为：**读取cookie得到用户信息并将用户对象放入请求，从而方便后续流程使用，还有如提取Locale、Theme信息等，只要是多个处理器都需要的即可使用拦截器实现。
+
 ## Issue
 
 ### 1、中文乱码问题
@@ -1082,7 +1169,7 @@ public class Cors {
 
 ### 4、spring.jackson.date-format 失效原因及解决方式
 
-#### 问题
+- 问题
 
 `spring.jackson.date-format`失效，导致序列化获取的时间是时间戳格式，不是常规使用的格式化的`json`
 
@@ -1097,7 +1184,7 @@ spring:
       write-dates-as-timestamps: false
 ```
 
-#### 原因
+- 原因
 
 在项目中继承了 `WebMvcConfigurationSupport `这个类。一般是因为`swagger`的`bean`配置中有继承，如下：
 
@@ -1110,7 +1197,7 @@ public class SwaggerConfig implements WebMvcConfigurationSupport {
         ...
 ~~~
 
-#### 解决方式
+- 解决方式
 
 修改为实现`WebMvcConfigurer`接口，如下：
 
