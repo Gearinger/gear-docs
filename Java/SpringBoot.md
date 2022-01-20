@@ -1025,6 +1025,63 @@ management:
 
 ### Mybatis-Plus
 
+#### 初始化
+
+#### 代码生成器
+
+#### ID雪花算法
+
+#### 通用Service
+
+~~~java
+// Save SaveOrUpdate Remove Update Get List Page Count Chain ...
+public class EmployeeImplService extends ServeceImpl<EmployeeMapper, Employee> impletments Employee{
+    
+}
+~~~
+
+#### Mapper
+
+~~~java
+// Insert Delete Update Select
+~~~
+
+
+
+#### 条件构造器
+
+~~~java
+@AutoWired
+EmployeeService employeeService;
+
+// 普通QueryWrapper
+public Collection<Employee> test(){
+    QueryWrapper<Employee> wrapper = new QueryWrapper<>();
+    wrapper.select("name", "gender")
+        .eq("gender", "man");
+    return employeeService.list(wrapper);
+}
+
+// 普通UpdateWrapper
+public Boolean test(){
+    QueryWrapper<Employee> wrapper = new QueryWrapper<>();
+    return wrapper.set("name", "Tom")
+        .eq("id", "0");
+}
+
+// lambda wrapper
+public Collection<Employee> test2(){
+    QueryWrapper<Employee> wrapper = new QueryWrapper<>();
+    wrapper.lambda()
+        .select(Employee::name, Employee::gender)
+        .eq(Employee::gender, "man");
+    return employeeService.list(wrapper);
+}
+
+~~~
+
+
+
 ### Swagger2
 
 ### Redis 缓存
