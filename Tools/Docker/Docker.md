@@ -283,3 +283,60 @@ services:
       - /data/docker/minio/config:/root/.minio
 ~~~
 
+---
+
+## Docker & MiniKube
+
+1、安装 docker
+
+[Explore Docker's Container Image Repository | Docker Hub](https://hub.docker.com/search?q=&type=edition&offering=community&sort=updated_at&order=desc)
+
+2、配置 docker 远程仓库（提供镜像给k8s使用）
+
+（1）配置
+
+~~~sh
+docker pull registry
+docker run -d -p 5000:5000 --name registry registry
+
+docker pull hyper/docker-registry-web
+docker run -d -p 5001:8080 --name registry-web --link registry -e REGISTRY_URL=http://registry:5000/v2 -e REGISTRY_NAME=localhost:5000 hyper/docker-registry-web
+
+~~~
+
+（2）推送远程仓库镜像
+
+~~~sh
+# 从dockerhub获取镜像
+docker pull hello-world
+# 重命名镜像（格式：必须在/前包含远程仓库地址，不然无法推送）
+docker tag hello-world localhost:5000/zyj-test:1.0
+
+# 将镜像推送到远程仓库
+docker push localhost:5000/zyj/test:1.0
+~~~
+
+（3）拉取远程仓库镜像
+
+~~~sh
+# 从远程仓库拉取镜像
+docker pull localhost:5000/zyj/test:1.0
+~~~
+
+3、安装 minikube
+
+[minikube start | minikube (k8s.io)](https://minikube.sigs.k8s.io/docs/start/)
+
+4、minikube 创建 deployment （使用私有仓库的镜像）
+
+
+
+5、minikube 常用命令
+
+
+
+> 远程仓库地址：127.0.0.1:5000
+>
+> 远程仓库web端：[Web Registry - Repositories](http://127.0.0.1:5001/)
+>
+> 

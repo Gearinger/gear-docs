@@ -1211,3 +1211,62 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 ...
 ~~~
 
+### 5、RestTemplate的使用
+
+> 高并发情况下，不适合使用单例模式（包括@Bean注入）
+
+~~~java
+// 创建调用 https 接口的 RestTemplate
+public RestTemplate buildRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+  SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+    @Override
+    public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+      return true;
+    }
+  }).build();
+
+  SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext,
+                                                                  new String[]{"TLSv1"},
+                                                                  null,
+                                                                 NoopHostnameVerifier.INSTANCE);
+
+  CloseableHttpClient httpClient = HttpClients.custom()
+    .setSSLSocketFactory(csf)
+    .build();
+
+  HttpComponentsClientHttpRequestFactory requestFactory =
+    new HttpComponentsClientHttpRequestFactory();
+
+  requestFactory.setHttpClient(httpClient);
+  RestTemplate restTemplate = new RestTemplate(requestFactory);
+  return restTemplate;
+}
+
+
+// 使用 RestTemplate
+// 注意必须使用 MultiValueMap 接收参数，restTemplate 无法解析 hashmap 的内容 
+public static void main(){
+  HttpHeaders headers = new HttpHeaders();
+  headers.add("Content-Type", "application/x-www-form-urlencoded");
+  headers.add("Authorization", "");
+
+  MultiValueMap requestBody = new LinkedMultiValueMap();
+  requestBody.add("username", userName);
+  requestBody.add("password", password);
+
+  HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(requestBody, headers);
+
+  try {
+    ResponseEntity<User> userResponseEntity = restTemplate.postForEntity(LOGIN_URL, httpEntity, User.class);
+    return userResponseEntity.getBody();
+  } catch (Exception e){
+    e.printStackTrace();
+  }
+}
+~~~
+
+### 6、Maven 依赖冲突
+
+使用`Maven Helper`插件可以直接查看冲突。
+
+[Maven Helper 安装使用_dhfzhishi的专栏-CSDN博客_mavenhelper使用](https://blog.csdn.net/dhfzhishi/article/details/81952760)
