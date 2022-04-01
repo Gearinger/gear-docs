@@ -1084,6 +1084,8 @@ public Collection<Employee> test2(){
 
 ### Swagger2
 
+### Knife4j
+
 ### Redis 缓存
 
 ### ElasticSearch
@@ -1327,3 +1329,198 @@ public static void main(){
 使用`Maven Helper`插件可以直接查看冲突。
 
 [Maven Helper 安装使用_dhfzhishi的专栏-CSDN博客_mavenhelper使用](https://blog.csdn.net/dhfzhishi/article/details/81952760)
+
+### 7、关于 Docker 打包
+
+当前主要使用的 docker 打包插件有三种。
+
+- io.fabric8 的 docker-maven-plugin
+- com.spotify 的 docker-maven-plugin
+- spring官方（org.springframework.boot）的 spring-boot-maven-plugin
+
+| 名称          | 优势                               | 劣势                                       | 补充                    |
+| ----------- | -------------------------------- | ---------------------------------------- | --------------------- |
+| io.fabric8  | 基本可以进行build、push、run、stop等所有容器操作 | 在配置时，无法将pom文件内的变量传递到dockfile文件内          | 主要使用pom配置             |
+| com.spotify | 功能相较少一些                          | pom文件中，可通过Resources节点将pom文件内的变量传递到dockfile文件内 |                       |
+| spring官方    | 基本可以进行所有容器操作                     | 镜像源只能用官方的，且国内难下载                         | 版本升级到SpringBoot 2.4.0 |
+
+#### （1）io.fabric8
+
+参考：https://mp.weixin.qq.com/s/3X6vVdWmjmWCyiLm35jpVw
+
+~~~xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>io.fabric8</groupId>
+      <artifactId>docker-maven-plugin</artifactId>
+      <version>0.33.0</version>
+      <configuration>
+        <!-- Docker 远程管理地址-->
+        <dockerHost>http://192.168.3.101:2375</dockerHost>
+        <!-- Docker 推送镜像仓库地址-->
+        <pushRegistry>http://192.168.3.101:5000</pushRegistry>
+        <images>
+          <image>
+            <!--由于推送到私有镜像仓库，镜像名需要添加仓库地址-->
+            <name>192.168.3.101:5000/mall-tiny/${project.name}:${project.version}</name>
+            <!--定义镜像构建行为-->
+            <build>
+              <!--定义基础镜像-->
+              <from>java:8</from>
+              <args>
+                <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
+              </args>
+              <!--定义哪些文件拷贝到容器中-->
+              <assembly>
+                <!--定义拷贝到容器的目录-->
+                <targetDir>/</targetDir>
+                <!--只拷贝生成的jar包-->
+                <descriptorRef>artifact</descriptorRef>
+              </assembly>
+              <!--定义容器启动命令-->
+              <entryPoint>["java", "-jar","/${project.build.finalName}.jar"]</entryPoint>
+              <!--定义维护者-->
+              <maintainer>macrozheng</maintainer>
+            </build>
+          </image>
+        </images>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+~~~
+
+需构建镜像时，idea 中可点击 maven 管理栏中的 package，再点击 docker:build
+
+或者，使用以下命令
+
+~~~sh
+mvn package docker:build
+~~~
+
+> 也可采用 dockerfile 的方式
+>
+> ```dockerfile
+> # 该镜像需要依赖的基础镜像
+> FROM java:8
+> # 将当前maven目录生成的文件复制到docker容器的/目录下
+> COPY maven /
+> # 声明服务运行在8080端口
+> EXPOSE 8080
+> # 指定docker容器启动时运行jar包
+> ENTRYPOINT ["java", "-jar","/mall-tiny-fabric-0.0.1-SNAPSHOT.jar"]
+> # 指定维护者的名字
+> MAINTAINER macrozheng
+> ```
+>
+> `<build> ` 节点配置替换为如下内容
+>
+> ```xml
+> <build>
+>   <dockerFileDir>${project.basedir}</dockerFileDir>
+> </build>
+> ```
+
+#### （2）com.spotify
+
+- 仅 pom 文件中配置
+
+~~~xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>com.spotify</groupId>
+      <artifactId>docker-maven-plugin</artifactId>
+      <version>1.0.0</version>
+      <configuration>
+        <imageName>mavendemo</imageName>
+        <baseImage>java</baseImage>
+        <maintainer>docker_maven docker_maven@email.com</maintainer>
+        <workdir>/ROOT</workdir>
+        <cmd>["java", "-version"]</cmd>
+        <entryPoint>["java", "-jar", "${project.build.finalName}.jar"]</entryPoint>
+        <!-- 这里是复制 jar 包到 docker 容器指定目录配置 -->
+        <resources>
+          <resource>
+            <targetPath>/ROOT</targetPath>
+            <directory>${project.build.directory}</directory>
+            <include>${project.build.finalName}.jar</include>
+          </resource>
+        </resources>
+      </configuration>
+    </plugin>
+  </plugins>
+</build>
+~~~
+
+- 配合 dockerfile 文件配置
+
+~~~xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>com.spotify</groupId>
+      <artifactId>docker-maven-plugin</artifactId>
+      <version>1.0.0</version>
+      <configuration>
+        <imageName>mavendemo</imageName>
+        <dockerDirectory>${basedir}/docker</dockerDirectory> <!-- 指定 Dockerfile 路径-->
+        <!-- 这里是复制 jar 包到 docker 容器指定目录配置，也可以写到 Docokerfile 中 -->
+        <resources>
+          <resource>
+            <targetPath>/ROOT</targetPath>
+            <directory>${project.build.directory}</directory>
+            <include>${project.build.finalName}.jar</include>
+          </resource>
+        </resources>
+      </configuration>
+    </plugin>   
+  </plugins>
+</build>
+~~~
+
+#### （3）spring-boot-maven-plugin
+
+参考：[还在使用第三方Docker插件？SpringBoot官方插件真香！ - Document (macrozheng.com)](http://www.macrozheng.com/#/reference/springboot_docker_plugin)
+
+~~~xml
+<plugin>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-maven-plugin</artifactId>
+  <configuration>
+    <image>
+      <!--配置镜像名称-->
+      <name>192.168.3.101:5000/mall-tiny/${project.name}:${project.version}</name>
+      <!--镜像打包完成后自动推送到镜像仓库-->
+      <publish>true</publish>
+    </image>
+    <docker>
+      <!--Docker远程管理地址-->
+      <host>http://192.168.3.101:2375</host>
+      <!--不使用TLS访问-->
+      <tlsVerify>false</tlsVerify>
+      <!--Docker推送镜像仓库配置-->
+      <publishRegistry>
+        <!--推送镜像仓库用户名-->
+        <username>test</username>
+        <!--推送镜像仓库密码-->
+        <password>test</password>
+        <!--推送镜像仓库地址-->
+        <url>http://192.168.3.101:5000</url>
+      </publishRegistry>
+    </docker>
+  </configuration>
+</plugin>
+~~~
+
+构建时，idea中直接双击SpringBoot插件的`build-image`
+
+或使用以下命令
+
+~~~sh
+mvn spring-boot:build-image
+~~~
+
+
+
