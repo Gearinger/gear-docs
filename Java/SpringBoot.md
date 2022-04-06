@@ -1524,3 +1524,21 @@ mvn spring-boot:build-image
 
 
 
+### 8、Linux 下部署 jar 包
+
+start.sh
+
+~~~sh
+#!/bin/sh
+nohup java -jar -Xms256m -Xmx512m  xxxxxxxx-1.0-SNAPSHOT.jar > ./output.log &
+echo $! > ./output.pid
+~~~
+
+stop.sh
+
+~~~sh
+#!/bin/bash
+PID=$(cat ./output.pid)
+kill -9 $PID
+~~~
+
