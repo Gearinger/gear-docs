@@ -1,0 +1,110 @@
+{
+  "main": {
+    "id": "08beeea8f0035898",
+    "type": "split",
+    "children": [
+      {
+        "id": "07e17d4d8d662b4f",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Others/产品该怎么有趣.md",
+            "mode": "source"
+          }
+        }
+      },
+      {
+        "id": "e4e203c62b7f8c1d",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Others/产品该怎么有趣.md",
+            "mode": "preview"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "16d614a2de118257",
+    "type": "split",
+    "children": [
+      {
+        "id": "c295551fb41a0906",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1dcae70635614114",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "846b43ac11f124f0",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "e01c9466c69c5f9a",
+    "type": "split",
+    "children": [
+      {
+        "id": "f0c69fda3f6b8d30",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f193e365665acdf9",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Others/产品该怎么有趣.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 444,
+    "collapsed": true
+  },
+  "active": "07e17d4d8d662b4f",
+  "lastOpenFiles": [
+    "Others/产品该怎么有趣.md",
+    "Others/罗素生前最后受BBC采访时说的话.md",
+    "C#/Framework历史版本特点.md",
+    "C#/CSharp.md",
+    "C#/ASPNET学习日志.md",
+    "C#/操作SQLite.md"
+  ]
+}
