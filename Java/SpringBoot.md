@@ -1542,3 +1542,46 @@ PID=$(cat ./output.pid)
 kill -9 $PID
 ~~~
 
+
+
+### 9、文件二进制流下载
+
+controller
+
+~~~java
+@PostMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+@ApiOperation("下载文件")
+public void download(@RequestParam String regionCode) {
+  Util.fileStreamToResponse(fillePath);
+}
+~~~
+
+~~~java
+public static void fileStreamToResponse(String filePath) throws IOException {
+  File file = new File(filePath);
+  String fileName = file.getName();
+
+  // 设置返回内容
+  ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+  HttpServletResponse response = requestAttributes.getResponse();
+  // 设置信息给客户端不解析
+  String type = new MimetypesFileTypeMap().getContentType(filePath);
+  // 设置contenttype，即告诉客户端所发送的数据属于什么类型
+  response.setHeader("Content-type", type);
+  response.setCharacterEncoding("utf-8");
+  // 设置扩展头，当Content-Type 的类型为要下载的类型时 , 这个信息头会告诉浏览器这个文件的名字和类型。
+  response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+
+  try (OutputStream outputStream = response.getOutputStream()) {
+    // 读取filename
+    try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(filePath))) {
+      byte[] buffer = new byte[1024];
+      int length = -1;
+      while ((length = inputStream.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, length);
+      }
+    }
+  }
+}
+~~~
+

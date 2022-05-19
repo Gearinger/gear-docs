@@ -26,7 +26,7 @@
 </service>
 ~~~
 
-## 3、、执行安装命令
+## 3、执行安装命令
 
 ~~~sh
 # 安装服务
@@ -44,14 +44,14 @@ WinSW-x64.exe uninstall
 
 命令如下表：
 
-| Command                                                      | Description                                              |
-| ------------------------------------------------------------ | -------------------------------------------------------- |
-| [install](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#install-command) | Installs the service.                                    |
-| [uninstall](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#uninstall-command) | Uninstalls the service.                                  |
-| [start](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#start-command) | Starts the service.                                      |
-| [stop](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#stop-command) | Stops the service.                                       |
-| [restart](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#restart-command) | Stops and then starts the service.                       |
-| [status](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#status-command) | Checks the status of the service.                        |
+| Command                                  | Description                              |
+| ---------------------------------------- | ---------------------------------------- |
+| [install](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#install-command) | Installs the service.                    |
+| [uninstall](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#uninstall-command) | Uninstalls the service.                  |
+| [start](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#start-command) | Starts the service.                      |
+| [stop](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#stop-command) | Stops the service.                       |
+| [restart](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#restart-command) | Stops and then starts the service.       |
+| [status](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#status-command) | Checks the status of the service.        |
 | [refresh](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#refresh-command) | Refreshes the service properties without reinstallation. |
-| [customize](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#customize-command) | Customizes the wrapper executable.                       |
-| dev                                                          | Experimental commands.                                   |
+| [customize](https://github.com/winsw/winsw/blob/v3/docs/cli-commands.md#customize-command) | Customizes the wrapper executable.       |
+| dev                                      | Experimental commands.                   |
