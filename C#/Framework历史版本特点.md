@@ -87,3 +87,4 @@ ASP.NET Core +  新版 64 位 JIT 编译器 + ADO.NET更新 +新的加密数字�
 **AJAX: **无需重新加载整个网页的情况下，能够更新部分网页的技术)
 
 **Silverlight :**是一个跨浏览器的、跨平台的[插件](https://baike.baidu.com/item/插件/369160)，为网络带来下一代基于.NETFramework的媒体体验和丰富的交互式应用程序。
+	
