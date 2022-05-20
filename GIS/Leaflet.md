@@ -46,7 +46,7 @@
   - latLngToContainerPoint(latlng)
   - latLngToLayerPoint(latlng)
   - layerPointToContainerPoint(point)
-  - layerPointToLatLng(poing)
+  - layerPointToLatLng(point)
 
   - openPopup(popup, latlng, options)
   - closePopup(popup)
@@ -61,6 +61,7 @@
 
 ~~~js
 - layer // 要素和图层均为layer
+	
 ~~~
 
 
