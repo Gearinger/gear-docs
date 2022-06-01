@@ -1565,4 +1565,84 @@ public static void fileStreamToResponse(String filePath) throws IOException {
 }
 ```
 
-# 
+### 10 、跨域问题
+
+常规跨域配置
+
+```java
+@Configuration
+public class GlobalCorsConfig {
+    @Bean
+    public CorsFilter corsFilter() {
+        //1. 添加 CORS配置信息
+        CorsConfiguration config = new CorsConfiguration();
+        //放行哪些原始域
+        config.addAllowedOrigin("*");
+        //是否发送 Cookie
+        config.setAllowCredentials(true);
+        //放行哪些请求方式
+        config.addAllowedMethod("*");
+        //放行哪些原始请求头部信息
+        config.addAllowedHeader("*");
+        //暴露哪些头部信息
+        config.addExposedHeader("*");
+        //2. 添加映射路径
+        UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        corsConfigurationSource.registerCorsConfiguration("/**",config);
+        //3. 返回新的CorsFilter
+        return new CorsFilter(corsConfigurationSource);
+    }
+}
+```
+
+> 例外：`SpringSecurity` 的环境下，需要针对 `SpringSecurity` 单独配置 `WebSecurityConfigurerAdapter`
+> 
+> ```java
+> // SpringSecurity 配置
+> @Configuration
+> @EnableWebSecurity
+> @EnableGlobalMethodSecurity(prePostEnabled = true)
+> public class SecurityConfig extends WebSecurityConfigurerAdapter {
+>     
+>     ...
+> 
+>     @Bean
+>     CorsConfigurationSource corsConfigurationSource(){
+>         CorsConfiguration configuration = new CorsConfiguration();
+>         // 允许从百度站点跨域
+>         configuration.addAllowedOriginPattern("*");
+>         configuration.addAllowedMethod("*");
+>         configuration.addAllowedHeader("*");
+> 
+>         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+>         //对所有URL生效
+>         source.registerCorsConfiguration("/**", configuration);
+>         return source;
+>     }
+> 
+>     @Override
+>     protected void configure(HttpSecurity httpSecurity) throws Exception {
+>         httpSecurity
+>                 .csrf().disable()
+>                 // 基于token，所以不需要session
+>                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+>                 .authorizeRequests()
+>                 // 对于获取token的rest api要允许匿名访问
+>                 .antMatchers("/**").permitAll()
+>                 ...
+>                 // 除上面外的所有请求全部需要鉴权认证
+>                 .anyRequest().authenticated();
+>         httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+>         // 禁用缓存
+>         httpSecurity.headers().cacheControl();
+>         // 异常返回给前端
+>         httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler());
+>         httpSecurity.exceptionHandling().accessDeniedHandler(restfulAccessDeniedHandler());
+> 
+>         httpSecurity.formLogin();
+>         httpSecurity.logout();
+>         // 开启跨域
+>         httpSecurity.cors();
+>     }
+> }
+> ```
