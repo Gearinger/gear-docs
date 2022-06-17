@@ -1,7 +1,6 @@
 Nginx 的基础配置说明
 
-~~~sh
-
+```sh
 worker_processes  1;
 
 events {
@@ -66,5 +65,4 @@ http {
 
     }
 }
-~~~
-
+```

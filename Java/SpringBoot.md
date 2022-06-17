@@ -1603,7 +1603,7 @@ public class GlobalCorsConfig {
 > @EnableWebSecurity
 > @EnableGlobalMethodSecurity(prePostEnabled = true)
 > public class SecurityConfig extends WebSecurityConfigurerAdapter {
->     
+> 
 >     ...
 > 
 >     @Bean
