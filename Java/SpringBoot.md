@@ -1,10 +1,10 @@
-## 环境配置
+## 一、环境配置
 
-### Maven
+### 1、Maven
 
-### JDK
+### 2、JDK
 
-## 教程
+## 二、教程
 
 ### 1、简单示例
 
@@ -14,7 +14,7 @@
 
 #### （2）全局依赖
 
-~~~xml
+```xml
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -25,14 +25,14 @@
         <artifactId>spring-boot-starter-test</artifactId>
     </dependency>
 </dependencies>
-~~~
+```
 
 #### （3）组织结构
 
 ![image-20211208194923516](https://gitee.com/gearinger/gear-markdown-pictures/raw/picgo/20211208-194925.png)
 
 > 1、`springboot2-demo/pom.xml ` 配置所有全局依赖；
->
+> 
 > 2、config 文件夹内定义swagger2、全局异常捕捉、返回结果包装、跨域处理；
 
 #### （4）Swagger2
@@ -127,7 +127,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 
 #### （5）返回结果包装
 
-~~~java
+```java
 /**
  * 返回结果定义
  *
@@ -251,13 +251,13 @@ public class ResultBody<T> {
     }
 
 }
-~~~
+```
 
 #### （6）全局异常
 
 > 定义接口 BaseErrorInfoInterface
 
-~~~java
+```java
 /**
  * 基本错误信息界面
  *
@@ -280,11 +280,11 @@ public interface BaseErrorInfoInterface {
      */
     String getResultMsg();
 }
-~~~
+```
 
 > 包装 RuntimeException
 
-~~~java
+```java
 /**
  * 业务异常
  *
@@ -366,7 +366,7 @@ public class BizException extends RuntimeException {
     }
 
 }
-~~~
+```
 
 > 定义异常枚举
 
@@ -417,7 +417,7 @@ public enum CommonEnum implements BaseErrorInfoInterface {
 
 > 全局异常处理
 
-~~~java
+```java
 /**
  * 全局异常处理
  *
@@ -472,7 +472,7 @@ public class GlobalExceptionHandler {
         return ResultBody.error(CommonEnum.INTERNAL_SERVER_ERROR);
     }
 }
-~~~
+```
 
 #### （7）全局跨域处理
 
@@ -510,7 +510,7 @@ public class Cors {
 
 > controller 必须使用@Api注解，因当前swagger配置的是用该注解扫描
 
-~~~java
+```java
 /**
  * 测试控制器
  *
@@ -561,11 +561,11 @@ public class TestController {
         return true;
     }
 }
-~~~
+```
 
 > 新建模块启动程序需指定扫描组件的位置 scanBasePackages，使config模块被扫描到；
 
-~~~java
+```java
 /**
  * 测试演示应用程序
  *
@@ -585,13 +585,13 @@ public class TestDemoApplication {
         System.out.println("----------程序开始运行----------");
     }
 }
-~~~
+```
 
 ### 2、自定义配置
 
 #### （1）@ConfigurationProperties 绑定配置+ @Configration 注入容器
 
-~~~JAVA
+```JAVA
 // 标记使之被扫描到，将当前class转为bean放置到容器中，以便后续获取使用（可换成@Component）
 @Configration
 // 与配置文件绑定
@@ -601,22 +601,22 @@ public class TestDemoApplication {
 public class TestConfig{
     private String name;
 }
-~~~
+```
 
 #### （2）@Value 绑定单个属性的配置+ @Configration 注入容器
 
-~~~JAVA
+```JAVA
 // 标记使之被扫描到，将当前class转为bean放置到容器中，以便后续获取使用（可换成@Component）
 @Configration
 public class TestConfig{
     @Value("${test.testConfig.name}")
     private String name;
 }
-~~~
+```
 
 #### （3）@ConfigurationProperties 绑定配置+ @EnableConfigurationProperties 注入容器
 
-~~~JAVA
+```JAVA
 // 与配置文件绑定
 @ConfigurationProperties(prefix="test")
 // lombok 添加get、set方法
@@ -632,11 +632,11 @@ public class TestConfig{
 public class Test2{
     ……
 }
-~~~
+```
 
 #### （4）@ConfigurationProperties 绑定配置+ @Bean 注入容器
 
-~~~JAVA
+```JAVA
 // 与配置文件绑定
 @ConfigurationProperties(prefix="test")
 // lombok 添加get、set方法
@@ -654,9 +654,7 @@ public class Test2{
         return new TestConfig()
     }
 }
-~~~
-
-
+```
 
 ### 3、常用注解
 
@@ -671,13 +669,13 @@ public class Test2{
 - @Import
 
 > 当前类被扫描到时，先注入目标类
->
-> ~~~JAVA
+> 
+> ```JAVA
 > @Import(Demo.Class)
 > public class Test{
->     
+> 
 > }
-> ~~~
+> ```
 
 - @AutoWired/@Resource
 
@@ -686,17 +684,17 @@ public class Test2{
 - @Qualifier
 
 > 当存在多个同类型bean时，配合@AutoWired，指明获取特定bean名称的实例
->
-> ~~~JAVA
+> 
+> ```JAVA
 > @Component
 > public class FooService {
 >     @Autowired
 >     @Qualifier("fooFormatter")
 >     private Formatter formatter;
->
+> 
 >     //todo 
 > }
-> ~~~
+> ```
 
 - @Component、@Configration、@Service、@Controller、@RestController
 
@@ -708,7 +706,7 @@ public class Test2{
 
 #### （1）自定义实现 HandlerInterceptor
 
-~~~JAVA
+```JAVA
 public class AdminInterceptor implements  HandlerInterceptor {
 
     /**
@@ -720,13 +718,13 @@ public class AdminInterceptor implements  HandlerInterceptor {
             //统一拦截（查询当前session是否存在user）(这里user会在每次登陆成功后，写入session)
             User user=(User)request.getSession().getAttribute("USER");
             if(user!=null){
-                return true;	// 放行
+                return true;    // 放行
             }
             response.sendRedirect(request.getContextPath()+"你的登陆页地址");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;	// 拦截
+        return false;    // 拦截
     }
 
     /**
@@ -734,7 +732,7 @@ public class AdminInterceptor implements  HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-        
+
     }
 
     /**
@@ -742,11 +740,11 @@ public class AdminInterceptor implements  HandlerInterceptor {
      */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        
+
     }
 
 }
-~~~
+```
 
 #### （2）注册自定义的拦截器
 
@@ -779,7 +777,7 @@ public class LoginConfig implements WebMvcConfigurer {
 
 实现javax.Servlet.Filter接口，并重写接口中定义的三个方法
 
-~~~java
+```java
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -820,9 +818,7 @@ public class TimeFilter implements Filter {
     return "";
   }
 }
-~~~
-
-
+```
 
 ### 7、单元测试
 
@@ -859,20 +855,19 @@ public class TimeFilter implements Filter {
 
 #### （3）前置条件
 
-~~~JAVA
+```JAVA
 @DisplayName("测试")
 @Test
 void Test(){
-    assumptions.assumpFalse(false);	// false 满足条件，继续执行后面的内容
-    assumptions.assumpTrue(false);	// false 不满足条件，不执行后面的内容，当前测试方法将被标记为跳过测试
+    assumptions.assumpFalse(false);    // false 满足条件，继续执行后面的内容
+    assumptions.assumpTrue(false);    // false 不满足条件，不执行后面的内容，当前测试方法将被标记为跳过测试
     ...
 }
-
-~~~
+```
 
 #### （4）嵌套测试
 
-~~~JAVA
+```JAVA
 // 外层声明的变量，会先在外层跑完所有测试，再进去内层跑测试。
 // 所以,外层修改变量值，会影响内层，但是内层修改变量值不会影响外层
 @SpringbootTest
@@ -898,35 +893,35 @@ class Test{
         }
     }
 }
-~~~
+```
 
 #### （5）参数化测试
 
 @ValueSource()
 
-~~~JAVA
+```JAVA
 @Test
 // 针对每个元素，都执行一遍测试方法
 @VaueSource(ints = {1,2,3,4,5})
 void Test(int i){
-	system.out.println(i);
+    system.out.println(i);
 }
-~~~
+```
 
 @MethodSource
 
-~~~JAVA
+```JAVA
 @Test
 // 针对每个元素，都执行一遍测试方法
 @MethodSource("Method")
 void Test(string str){
-	system.out.println(str);
+    system.out.println(str);
 }
 
 Static Stream<String> Method(){
-	return Stream.of("A","B","C")
+    return Stream.of("A","B","C")
 }
-~~~
+```
 
 ### 8、监控
 
@@ -939,7 +934,7 @@ Static Stream<String> Method(){
 </dependency>
 ```
 
-~~~yaml
+```yaml
 management:
   endpoints:
     enabled-by-default: true
@@ -949,13 +944,13 @@ management:
       include: *
 #自定义管理端点路径
 #management.endpoints.web.base-path=/manage
-~~~
+```
 
 #### （2）可视化界面 Spring Boot Admin Server
 
 - 创建新的项目用于服务端监控
 
-~~~XML
+```XML
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-server</artifactId>
@@ -965,11 +960,11 @@ management:
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
-~~~
+```
 
-~~~JAVA
+```JAVA
 @SpringBootApplication
-@EnableAdminServer	启动监控
+@EnableAdminServer    启动监控
 public class AdminServerApplication {
 
     public static void main(String[] args) {
@@ -977,27 +972,27 @@ public class AdminServerApplication {
     }
 
 }
-~~~
+```
 
-~~~YAML
+```YAML
 spring:
   application:
     name: admin-server
 server:
   port: 8888
-~~~
+```
 
 - 配置被监控的客户端
 
-~~~xml
+```xml
 <dependency>
     <groupId>de.codecentric</groupId>
     <artifactId>spring-boot-admin-starter-client</artifactId>
     <version>2.1.0</version>
 </dependency>
-~~~
+```
 
-~~~YAML
+```YAML
 spring:
   application:
     name: admin-client
@@ -1017,13 +1012,13 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-~~~
+```
 
-## 常用Jar包整合
+## 三、常用Jar包整合
 
-### PostgreSQL
+### 1、PostgreSQL
 
-### Mybatis-Plus
+### 2、Mybatis-Plus
 
 #### 初始化
 
@@ -1033,24 +1028,22 @@ management:
 
 #### 通用Service
 
-~~~java
+```java
 // Save SaveOrUpdate Remove Update Get List Page Count Chain ...
 public class EmployeeImplService extends ServeceImpl<EmployeeMapper, Employee> impletments Employee{
-    
+
 }
-~~~
+```
 
 #### Mapper
 
-~~~java
+```java
 // Insert Delete Update Select
-~~~
-
-
+```
 
 #### 条件构造器
 
-~~~java
+```java
 @AutoWired
 EmployeeService employeeService;
 
@@ -1077,60 +1070,55 @@ public Collection<Employee> test2(){
         .eq(Employee::gender, "man");
     return employeeService.list(wrapper);
 }
+```
 
-~~~
+### 3、Swagger2
 
+### 4、Knife4j
 
+### 5、Redis 缓存
 
-### Swagger2
+### 6、ElasticSearch
 
-### Knife4j
+### 7、GeoTools
 
-### Redis 缓存
+> 尚硅谷SpringBoot2文档：[SpringBoot2核心技术与响应式编程 · 语雀 (yuque.com)](https://www.yuque.com/atguigu/springboot)
 
-### ElasticSearch
-
-### GeoTools
-
-## 尚硅谷SpringBoot2文档
-
-[SpringBoot2核心技术与响应式编程 · 语雀 (yuque.com)](https://www.yuque.com/atguigu/springboot)
-
-## 知识点
+## 四、知识点
 
 ### 1、过滤器和拦截器的主要区别
 
 过滤器主要作用
 
 > 1) Authentication Filters, 即用户访问权限过滤
->
+> 
 > 2) Logging and Auditing Filters, 日志过滤，可以记录特殊用户的特殊请求的记录等
->
+> 
 > 3) Image conversion Filters
->
+> 
 > 4) Data compression Filters
->
+> 
 > 5) Encryption Filters
->
+> 
 > 6) Tokenizing Filters
->
+> 
 > 7) Filters that trigger resource access events
->
+> 
 > 8) XSL/T filters
->
+> 
 > 9) Mime-type chain Filter
 
 拦截器主要作用
 
 > 1) **日志记录：**记录请求信息的日志，以便进行信息监控、信息统计、计算PV（Page View）等
->
+> 
 > 2) **权限检查：**如登录检测，进入处理器检测检测是否登录
->
+> 
 > 3) **性能监控：**通过拦截器在进入处理器之前记录开始时间，在处理完后记录结束时间，从而得到该请求的处理时间。（反向代理，如apache也可以自动记录）；
->
+> 
 > 4) **通用行为：**读取cookie得到用户信息并将用户对象放入请求，从而方便后续流程使用，还有如提取Locale、Theme信息等，只要是多个处理器都需要的即可使用拦截器实现。
 
-## Issue
+## 五、Issue
 
 ### 1、中文乱码问题
 
@@ -1140,7 +1128,7 @@ public Collection<Employee> test2(){
 
 由于添加Swagger2的配置引入了`WebMvcConfigurationSupport`
 
-~~~java
+```java
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig extends WebMvcConfigurationSupport {
@@ -1151,19 +1139,19 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
         ……
     }
 }
-~~~
+```
 
 - 解决方式
 
 删除addResourceHandlers方法的重写，修改为
 
-~~~java
+```java
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
     ……
 }
-~~~
+```
 
 ### 2、跨域配置正则问题
 
@@ -1206,12 +1194,12 @@ public class Cors {
 ![image-20210220135908055](https://gitee.com/gearinger/gear-markdown-pictures/raw/picgo/20211206-153614.png)
 
 - 解决方式
-
+  
   - 方式一
-
+  
   Application的类上添加`@EnableSwaggerBootstrapUI`注解。
-
-  ~~~java
+  
+  ```java
   @SpringBootApplication
   @EnableSwagger2
   @EnableSwaggerBootstrapUI
@@ -1220,10 +1208,10 @@ public class Cors {
           SpringApplication.run(DemoApplication.class, args);
       }
   }
-  ~~~
-
+  ```
+  
   - 方式二
-
+  
   找到本地Maven仓库的SwaggerBootstrapUI包进行删除，再重新拉取。
 
 ### 4、spring.jackson.date-format 失效原因及解决方式
@@ -1247,20 +1235,20 @@ spring:
 
 在项目中继承了 `WebMvcConfigurationSupport `这个类。一般是因为`swagger`的`bean`配置中有继承，如下：
 
-~~~java
+```java
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurationSupport {
     @Bean
     public Docket createRestApi() {
         ...
-~~~
+```
 
 - 解决方式
 
 修改为实现`WebMvcConfigurer`接口，如下：
 
-~~~java
+```java
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig implements WebMvcConfigurer {
@@ -1268,13 +1256,13 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 ...
-~~~
+```
 
 ### 5、RestTemplate的使用
 
 > 高并发情况下，不适合使用单例模式（包括@Bean注入）
 
-~~~java
+```java
 // 创建调用 https 接口的 RestTemplate
 public RestTemplate buildRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
   SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
@@ -1322,7 +1310,7 @@ public static void main(){
     e.printStackTrace();
   }
 }
-~~~
+```
 
 ### 6、Maven 依赖冲突
 
@@ -1338,17 +1326,17 @@ public static void main(){
 - com.spotify 的 docker-maven-plugin
 - spring官方（org.springframework.boot）的 spring-boot-maven-plugin
 
-| 名称          | 优势                               | 劣势                                       | 补充                    |
-| ----------- | -------------------------------- | ---------------------------------------- | --------------------- |
-| io.fabric8  | 基本可以进行build、push、run、stop等所有容器操作 | 在配置时，无法将pom文件内的变量传递到dockfile文件内          | 主要使用pom配置             |
+| 名称          | 优势                               | 劣势                                            | 补充                    |
+| ----------- | -------------------------------- | --------------------------------------------- | --------------------- |
+| io.fabric8  | 基本可以进行build、push、run、stop等所有容器操作 | 在配置时，无法将pom文件内的变量传递到dockfile文件内               | 主要使用pom配置             |
 | com.spotify | 功能相较少一些                          | pom文件中，可通过Resources节点将pom文件内的变量传递到dockfile文件内 |                       |
-| spring官方    | 基本可以进行所有容器操作                     | 镜像源只能用官方的，且国内难下载                         | 版本升级到SpringBoot 2.4.0 |
+| spring官方    | 基本可以进行所有容器操作                     | 镜像源只能用官方的，且国内难下载                              | 版本升级到SpringBoot 2.4.0 |
 
 #### （1）io.fabric8
 
 参考：https://mp.weixin.qq.com/s/3X6vVdWmjmWCyiLm35jpVw
 
-~~~xml
+```xml
 <build>
   <plugins>
     <plugin>
@@ -1389,18 +1377,18 @@ public static void main(){
     </plugin>
   </plugins>
 </build>
-~~~
+```
 
 需构建镜像时，idea 中可点击 maven 管理栏中的 package，再点击 docker:build
 
 或者，使用以下命令
 
-~~~sh
+```sh
 mvn package docker:build
-~~~
+```
 
 > 也可采用 dockerfile 的方式
->
+> 
 > ```dockerfile
 > # 该镜像需要依赖的基础镜像
 > FROM java:8
@@ -1413,9 +1401,9 @@ mvn package docker:build
 > # 指定维护者的名字
 > MAINTAINER macrozheng
 > ```
->
+> 
 > `<build> ` 节点配置替换为如下内容
->
+> 
 > ```xml
 > <build>
 >   <dockerFileDir>${project.basedir}</dockerFileDir>
@@ -1426,7 +1414,7 @@ mvn package docker:build
 
 - 仅 pom 文件中配置
 
-~~~xml
+```xml
 <build>
   <plugins>
     <plugin>
@@ -1452,11 +1440,11 @@ mvn package docker:build
     </plugin>
   </plugins>
 </build>
-~~~
+```
 
 - 配合 dockerfile 文件配置
 
-~~~xml
+```xml
 <build>
   <plugins>
     <plugin>
@@ -1478,13 +1466,13 @@ mvn package docker:build
     </plugin>   
   </plugins>
 </build>
-~~~
+```
 
 #### （3）spring-boot-maven-plugin
 
 参考：[还在使用第三方Docker插件？SpringBoot官方插件真香！ - Document (macrozheng.com)](http://www.macrozheng.com/#/reference/springboot_docker_plugin)
 
-~~~xml
+```xml
 <plugin>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-maven-plugin</artifactId>
@@ -1512,33 +1500,149 @@ mvn package docker:build
     </docker>
   </configuration>
 </plugin>
-~~~
+```
 
 构建时，idea中直接双击SpringBoot插件的`build-image`
 
 或使用以下命令
 
-~~~sh
+```sh
 mvn spring-boot:build-image
-~~~
-
-
+```
 
 ### 8、Linux 下部署 jar 包
 
 start.sh
 
-~~~sh
+```sh
 #!/bin/sh
 nohup java -jar -Xms256m -Xmx512m  xxxxxxxx-1.0-SNAPSHOT.jar > ./output.log &
 echo $! > ./output.pid
-~~~
+```
 
 stop.sh
 
-~~~sh
+```sh
 #!/bin/bash
 PID=$(cat ./output.pid)
 kill -9 $PID
-~~~
+```
 
+### 9、文件二进制流下载
+
+```java
+@PostMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+@ApiOperation("下载文件")
+public void download(@RequestParam String regionCode) {
+  Util.fileStreamToResponse(fillePath);
+}
+```
+
+```java
+public static void fileStreamToResponse(String filePath) throws IOException {
+  File file = new File(filePath);
+  String fileName = file.getName();
+  // 设置返回内容
+  ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+  HttpServletResponse response = requestAttributes.getResponse();
+  // 设置信息给客户端不解析
+  String type = new MimetypesFileTypeMap().getContentType(filePath);
+  // 设置contenttype，即告诉客户端所发送的数据属于什么类型
+  response.setHeader("Content-type", type);
+  response.setCharacterEncoding("utf-8");
+  // 设置扩展头，当Content-Type 的类型为要下载的类型时 , 这个信息头会告诉浏览器这个文件的名字和类型。
+  response.setHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(fileName, "UTF-8"));
+  try (OutputStream outputStream = response.getOutputStream()) {
+    // 读取filename
+    try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(filePath))) {
+      byte[] buffer = new byte[1024];
+      int length = -1;
+      while ((length = inputStream.read(buffer)) != -1) {
+        outputStream.write(buffer, 0, length);
+      }
+    }
+  }
+}
+```
+
+### 10 、跨域问题
+
+常规跨域配置
+
+```java
+@Configuration
+public class GlobalCorsConfig {
+    @Bean
+    public CorsFilter corsFilter() {
+        //1. 添加 CORS配置信息
+        CorsConfiguration config = new CorsConfiguration();
+        //放行哪些原始域
+        config.addAllowedOrigin("*");
+        //是否发送 Cookie
+        config.setAllowCredentials(true);
+        //放行哪些请求方式
+        config.addAllowedMethod("*");
+        //放行哪些原始请求头部信息
+        config.addAllowedHeader("*");
+        //暴露哪些头部信息
+        config.addExposedHeader("*");
+        //2. 添加映射路径
+        UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        corsConfigurationSource.registerCorsConfiguration("/**",config);
+        //3. 返回新的CorsFilter
+        return new CorsFilter(corsConfigurationSource);
+    }
+}
+```
+
+> 例外：`SpringSecurity` 的环境下，需要针对 `SpringSecurity` 单独配置 `WebSecurityConfigurerAdapter`
+> 
+> ```java
+> // SpringSecurity 配置
+> @Configuration
+> @EnableWebSecurity
+> @EnableGlobalMethodSecurity(prePostEnabled = true)
+> public class SecurityConfig extends WebSecurityConfigurerAdapter {
+> 
+>     ...
+> 
+>     @Bean
+>     CorsConfigurationSource corsConfigurationSource(){
+>         CorsConfiguration configuration = new CorsConfiguration();
+>         // 允许从百度站点跨域
+>         configuration.addAllowedOriginPattern("*");
+>         configuration.addAllowedMethod("*");
+>         configuration.addAllowedHeader("*");
+> 
+>         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+>         //对所有URL生效
+>         source.registerCorsConfiguration("/**", configuration);
+>         return source;
+>     }
+> 
+>     @Override
+>     protected void configure(HttpSecurity httpSecurity) throws Exception {
+>         httpSecurity
+>                 .csrf().disable()
+>                 // 基于token，所以不需要session
+>                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+>                 .authorizeRequests()
+>                 // 对于获取token的rest api要允许匿名访问
+>                 .antMatchers("/**").permitAll()
+>                 ...
+>                 // 除上面外的所有请求全部需要鉴权认证
+>                 .anyRequest().authenticated();
+>         httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+>         // 禁用缓存
+>         httpSecurity.headers().cacheControl();
+>         // 异常返回给前端
+>         httpSecurity.exceptionHandling().authenticationEntryPoint(authenticationEntryPointHandler());
+>         httpSecurity.exceptionHandling().accessDeniedHandler(restfulAccessDeniedHandler());
+> 
+>         httpSecurity.formLogin();
+>         httpSecurity.logout();
+>         // 开启跨域
+>         httpSecurity.cors();
+>     }
+> }
+> ```
