@@ -1,14 +1,14 @@
 ### 基础知识
 
-~~~fortran
+```fortran
 IMPLICIT NONE
 ! 建议所有代码都加入此内容
 ! 加入这个叙述之后，会把内定型态的功能关闭
-~~~
+```
 
 简单示例：
 
-~~~fortran
+```fortran
 ! Free Format
 program main
 IMPLICIT NONE
@@ -18,7 +18,7 @@ write(*,*) &
 wri&
 te(*,*) “hello”
 end
-~~~
+```
 
 ! 为注释标识符号
 
@@ -28,7 +28,7 @@ write(位置，格式) "字符串"
 
 ### 变量定义
 
-~~~fortran
+```fortran
 ! 变量定义
 
 ! 整数
@@ -45,16 +45,16 @@ real*8 a
 complex a
 
 ! 字符及字符串
-CHARACTER a	! 单个字符
-CHARACTER(10) a	! 长度为10的字符串
+CHARACTER a    ! 单个字符
+CHARACTER(10) a    ! 长度为10的字符串
 CHARACTER*10 a
 CHARACTER*(10) a
 CHARACTER(LEN=10) a
-~~~
+```
 
 ### DEMO 示例
 
-~~~fortran
+```fortran
 ! demo
 PROGRAM xxxx
 IMPLICIT NONE
@@ -65,11 +65,11 @@ WRITE (*,*) INT1+INT2
 ……………………….
 STOP
 END
-~~~
+```
 
 ### if
 
-~~~fortran
+```fortran
 IF(逻辑判断式) THEN
 执行动作 1
 ELSE
@@ -90,11 +90,9 @@ WRITE(*,*) “UNDER CONTROL”
 END IF
 STOP
 END
-~~~
+```
 
-
-
-~~~
+```
 = = 相等
 / = 不相等
 > 大于
@@ -106,11 +104,11 @@ END
 .NOT. 如果后面的式子不成立，整个式子就算成立
 .EQV. 两边式子的逻辑运算结果相同时，整个式子就成立
 .NEQV. 两边式子的逻辑运算结果不同时，整个式子就成立
-~~~
+```
 
 ### do
 
-~~~fortran
+```fortran
 DO 起始值, 终止值, 累加值
 执行程序代码
 END DO
@@ -118,26 +116,26 @@ END DO
 DO I=10, 5, -1
 WRITE(*,*) I
 END DO
-~~~
+```
 
 ### do…while
 
-~~~fortran
+```fortran
 DO 起始值, 终止值, 累加值
 执行程序代码
 END DO
-~~~
+```
 
 ### 数组
 
-~~~fortran
+```fortran
 integer a(10) !宣告 a 这个数组有 10 个元素
 integer , dimension(10) :: a ! 同上，另一种作法
-~~~
+```
 
 ### 主程序 子程序
 
-~~~fortran
+```fortran
 PROGRAM MAIN
 IMPLICIT NONE
 INTEGER :: A=1
@@ -152,9 +150,9 @@ INTEGER NUM
 NUM = NUM + 1
 RETURN
 END SUBROUTINE
-~~~
+```
 
-~~~fortran
+```fortran
 PROGRAM MAIN
 IMPLICIT NONE
 REAL, EXTERNAL:: TRIPPLE
@@ -170,5 +168,4 @@ IMPLICIT NONE
  TRIPPLE = NUM * 3
  RETURN
 END
-~~~
-
+```

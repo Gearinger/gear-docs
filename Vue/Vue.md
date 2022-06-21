@@ -2,8 +2,6 @@
 
 ## 环境
 
-
-
 ## 结构
 
 ![实例的生命周期](https://v3.cn.vuejs.org/images/lifecycle.svg)
@@ -20,34 +18,32 @@
 
 node_global（全局依赖的安装位置） 和 node_cache（缓存位置）
 
-~~~sh
+```sh
 # 原路径在 C:\Users\Administrator\AppData\Roaming
 npm config set prefix "D:\Program Files\nodejs\node_global"
 npm config set cache "D:\Program Files\nodejs\node_cache"
-~~~
+```
 
 #### （3）环境变量
 
-~~~
-NODE_PATH	D:\Program Files\nodejs\node_global\node_modules
-PATH		D:\Program Files\nodejs\node_global
-~~~
-
-
+```
+NODE_PATH    D:\Program Files\nodejs\node_global\node_modules
+PATH        D:\Program Files\nodejs\node_global
+```
 
 #### （4）测试
 
-~~~sh
+```sh
 # 查看版本号
 npm -v
-~~~
+```
 
 #### （5）常用命令/工具
 
-~~~sh
+```sh
 # 安装
-npm install			# 安装
-npm install -g		# 全局安装
+npm install            # 安装
+npm install -g        # 全局安装
 npm -i
 
 # 配置镜像源
@@ -69,59 +65,55 @@ yarn global add @vue/cli
 npm update -g @vue/cli
 # 或者
 yarn global upgrade --latest @vue/cli
-
-~~~
-
-
+```
 
 ## 知识点
 
 ### 1、JS关键字
 
 #### export
+
 模块是独立的文件，该文件内部的所有的变量外部都无法获取。如果希望获取某个变量，必须通过export输出
 
 - 单个变量/函数/类输出
 
-~~~js
+```js
 // profile.js
 export var firstName = 'Michael';
 export var fun1 = (a, b)=>{return a+b;};
-~~~
+```
 
 - 多个变量/函数/类同时输出
 
-~~~js
+```js
 // profile.js
 var firstName = 'Michael';
 export var fun1 = (a, b)=>{return a+b;};
 
 export {firstName, fun1 as funTest};
-~~~
+```
 
 - export default
 
-~~~js
+```js
 // export-default.js
 export default function () {
   console.log('foo');
 }
-~~~
+```
 
-~~~js
+```js
 // 加载该模块时，import命令可以为该匿名函数指定任意名字
 // import-default.js
 import customName from './export-default';
 customName(); // 'foo'
-~~~
-
-
+```
 
 #### import
 
 export定义了模块的对外接口后，其他JS文件就可以通过import来加载这个模块
 
-~~~js
+```js
 // main.js
 import {firstName, funTest} from './profile';
 
@@ -129,13 +121,13 @@ function setName(element) {
   element.textContent = firstName;
   element.age = funTest(10,10);
 }
-~~~
+```
 
 - import()
 
 放在语句中，对括号内的内容进行加载
 
-~~~js
+```js
 // import模块在事件监听函数中，只有用户点击了按钮，才会加载这个模块。
 button.addEventListener('click', event => {
   import('./dialogBox.js')
@@ -146,16 +138,16 @@ button.addEventListener('click', event => {
     /* Error handling */
   })
 });
-~~~
+```
 
 ### 2、this.$message
 
-~~~js
+```js
 // 通知消息
 this.$message.info();
 this.$message.warning();
 this.$message.error();
-~~~
+```
 
 ### 3、引用 iconfont
 
@@ -167,10 +159,10 @@ this.$message.error();
 2. 进入该项目，并点击下载至本地
 3. 将所有文件拷贝到本地代码项目，并引用
 
-~~~js
+```js
 <template lang="">
     <div>
-  		// 页面上的icon
+          // 页面上的icon
         <i class="iconfont" :class="iconfont icon-shouye"></i>
     </div>
 </template>
@@ -187,9 +179,9 @@ export default {
 
 <style>
 </style>
-~~~
+```
 
-### 4、添加 leaflet 
+### 4、添加 leaflet
 
 ### 5、elementui 主题
 
@@ -201,9 +193,7 @@ export default {
 
 #### 1、vue的index代理问题
 
-
-
-~~~js
+```js
 proxyTable: {
   '/api': {
     target: 'http://127.0.0.1:9000', // 你请求的第三方接口
@@ -213,11 +203,11 @@ proxyTable: {
         }
   }
 },
-~~~
+```
 
 #### 2、下载文件
 
-~~~js
+```js
 // 获取二进制流
 const reqByBlob = (method, url, params) => {
   return axios({
@@ -240,13 +230,13 @@ const reqByBlob = (method, url, params) => {
     responseType: "arraybuffer",
   });
 };
-~~~
+```
 
-~~~js
+```js
 export const downloadFile = (params) => { return reqByBlob("post", "/api/fieldmanagesystem/file/download", params) };
-~~~
+```
 
-~~~js
+```js
 downloadFile({ fileId: "1485852740822310913" }).then((response) => {
   var filename = response.headers; //下载后文件名
   filename = filename["content-disposition"];
@@ -261,7 +251,7 @@ downloadFile({ fileId: "1485852740822310913" }).then((response) => {
   document.body.removeChild(downloadElement); //下载完成移除元素
   window.URL.revokeObjectURL(href); //释放掉blob对象
 });
-~~~
+```
 
 #### 3、Vue组件里的Style中如何引用data中的数据
 

@@ -8,7 +8,7 @@
 
 - 全局依赖
 
-~~~xml
+```xml
 <dependencies>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -19,7 +19,7 @@
         <artifactId>spring-boot-starter-test</artifactId>
     </dependency>
 </dependencies>
-~~~
+```
 
 ## 三、配置全局处理
 
@@ -28,15 +28,15 @@
 ![image-20210128102834846](https://i.loli.net/2021/01/28/QXGErtjTFZxlB2O.png)
 
 > 1、`springboot2-demo/pom.xml ` 配置所有全局依赖；
->
+> 
 > 2、config 文件夹内定义swagger2、全局异常捕捉、返回结果包装、跨域处理；
 
 - Swagger2
-
+  
   - 配置依赖
-
+  
   > `springboot2-demo/config/pom.xml` 
-
+  
   ```xml
   <!-- swagger2-->
   <dependency>
@@ -56,8 +56,9 @@
       <version>1.9.6</version>
   </dependency>
   ```
+  
   - 注入配置组件
-
+  
   ```java
   /**
    * Swagger的配置
@@ -120,7 +121,7 @@
 
 - 返回结果包装
 
-~~~java
+```java
 /**
  * 返回结果定义
  *
@@ -244,13 +245,13 @@ public class ResultBody<T> {
     }
 
 }
-~~~
+```
 
 - 全局异常
 
 > 定义接口 BaseErrorInfoInterface
 
-~~~java
+```java
 /**
  * 基本错误信息界面
  *
@@ -273,11 +274,11 @@ public interface BaseErrorInfoInterface {
      */
     String getResultMsg();
 }
-~~~
+```
 
 > 包装 RuntimeException
 
-~~~java
+```java
 /**
  * 业务异常
  *
@@ -359,7 +360,7 @@ public class BizException extends RuntimeException {
     }
 
 }
-~~~
+```
 
 > 定义异常枚举
 
@@ -410,7 +411,7 @@ public enum CommonEnum implements BaseErrorInfoInterface {
 
 > 全局异常处理
 
-~~~java
+```java
 /**
  * 全局异常处理
  *
@@ -465,7 +466,7 @@ public class GlobalExceptionHandler {
         return ResultBody.error(CommonEnum.INTERNAL_SERVER_ERROR);
     }
 }
-~~~
+```
 
 - 全局跨域处理
 
@@ -503,7 +504,7 @@ public class Cors {
 
 > controller 必须使用@Api注解，因当前swagger配置的是用该注解扫描
 
-~~~java
+```java
 /**
  * 测试控制器
  *
@@ -554,11 +555,11 @@ public class TestController {
         return true;
     }
 }
-~~~
+```
 
 > 新建模块启动程序需指定扫描组件的位置 scanBasePackages，使config模块被扫描到；
 
-~~~java
+```java
 /**
  * 测试演示应用程序
  *
@@ -578,5 +579,4 @@ public class TestDemoApplication {
         System.out.println("----------程序开始运行----------");
     }
 }
-~~~
-
+```

@@ -2,7 +2,7 @@
 
 ## 一、环境部署
 
-~~~sh
+```sh
 # 创建虚拟环境
 virtualenv env
 
@@ -13,8 +13,7 @@ source activate
 # 安装包
 pip install fastapi
 pip install uvicorn
-
-~~~
+```
 
 ## 二、创建API并运行
 
@@ -22,7 +21,7 @@ pip install uvicorn
 
 创建main.py文件
 
-~~~python
+```python
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -31,13 +30,13 @@ app = FastAPI()
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-~~~
+```
 
 运行服务器
 
-~~~python
+```python
 uvicorn main:app --reload
-~~~
+```
 
 相关地址
 
@@ -49,7 +48,7 @@ uvicorn main:app --reload
 
 另一种启动方式的示例
 
-~~~python
+```python
 from typing import Optional
 import uvicorn
 from fastapi import FastAPI
@@ -68,6 +67,4 @@ async def read_item(item_id: int, q: Optional[str] = None):
 
 if __name__ == '__main__':
     uvicorn.run(app='Main:app', host="127.0.0.1", port=8000, reload=True, debug=True)
-~~~
-
-
+```

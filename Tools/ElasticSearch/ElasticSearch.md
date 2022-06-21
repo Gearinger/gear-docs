@@ -6,7 +6,7 @@
 
 [Running the Elastic Stack ("ELK") on Docker | Getting Started 8.1 | Elastic](https://www.elastic.co/guide/en/elastic-stack-get-started/current/get-started-stack-docker.html)
 
-~~~sh
+```sh
 # 拉取 ES 镜像
 docker pull docker.elastic.co/elasticsearch/elasticsearch:8.1.0
 # 创建自定义网络
@@ -18,17 +18,17 @@ docker run --name es01 --net elastic -p 9200:9200 -it docker.elastic.co/elastics
 docker pull docker.elastic.co/kibana/kibana:8.1.0
 # 运行 kibana 实例
 docker run --name kibana --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:8.1.0
-~~~
+```
 
 > 注意：ES 运行成功时显示的秘钥信息需要保存，供后续使用
->
+> 
 > windows环境下需扩展内存：
->
-> ~~~sh
+> 
+> ```sh
 > wsl -d docker-desktop
 > sysctl -w vm.max_map_count=262144
 > exit
-> ~~~
+> ```
 
 #### （2）`Linux` 环境安装
 
@@ -38,7 +38,7 @@ docker run --name kibana --net elastic -p 5601:5601 docker.elastic.co/kibana/kib
 
 #### （1）简要了解
 
-~~~sh
+```sh
 # 自动创建索引
 POST /gear_test/_doc
 {
@@ -50,11 +50,11 @@ GET /gear_test/_search
 
 # 删除索引
 DELETE /gear_test
-~~~
+```
 
 #### （2）所有DSL简要使用
 
-~~~sh
+```sh
 # 创建索引
 PUT /customer?pretty
 
@@ -86,13 +86,13 @@ PUT /customer/_doc/1
 GET /customer/_search
 
 DELETE /customer
-~~~
+```
 
 #### （3）GET 详解
 
 > ES是使用分词器对字符串进行拆分后，再创建倒排索引的。非拆分字符，是搜索不到相应内容的。eg："Jac"无法搜索到"Jack like the chair."
 
-~~~sh
+```sh
 # 从所有索引里查询
 GET _search
 {   
@@ -113,19 +113,19 @@ GET _search
       ] 
     }
 
-	# range 字段值是否在某个范围
+    # range 字段值是否在某个范围
     "range": { 
       "uid": { 
         "gt": 1234,
         "lte": 12345
       } 
     } 
-	
-	# exists 字段是否存在
+
+    # exists 字段是否存在
     "exists": { 
       "field":"msgcode" 
     } 
-    
+
     # bool 合并多个过滤条件
     "bool": {
       "must": {
@@ -153,17 +153,17 @@ GET _search
       "adjust_pure_negative": true,
       "boost": 1
     }
-    
-	# wildcard 类似于SQL的like查询
-	"wildcard": { 
+
+    # wildcard 类似于SQL的like查询
+    "wildcard": { 
        "message":"*wu*" 
     } 
-    
+
     # regexp 正则查询
     "regexp": { 
        "message":"xu[0-9]" 
     } 
-    
+
     # match 全文检索，使用ik_smart将"超级羽绒服"分词，再用分词结果到es中查询包含"超级"、"羽绒"、"羽绒服"（具体分词根据分词器变化）等分词的记录，进行评分排序输出。不指定分词器时采用默认分词器。
     "match": {
       "name": {
@@ -171,7 +171,7 @@ GET _search
         "analyzer": "ik_smart"
       }
     }
-    
+
     # match_phrase 不采用分词器，直接查找包含对应短语的记录
     # 与match的区别：match采用分词器，match_phrase不采用分词器
     "match_phrase": { 
@@ -179,9 +179,9 @@ GET _search
     } 
   }
 }
-~~~
+```
 
-​	
+​    
 
 ### 3、其他
 
@@ -191,7 +191,7 @@ GET _search
 
 > ES针对空间数据包含两种字段类型：geo_point、geo_shape
 
-~~~sh
+```sh
 # 创建索引，指定字段类型
 PUT /example
 {
@@ -219,13 +219,13 @@ GET /example/_search
 
 # 删除索引
 DELETE /example
-~~~
+```
 
 ##### geometry 插入
 
 - geojson 格式插入
 
-~~~sh
+```sh
 # 新增数据
 PUT /example/_doc?refresh
 {
@@ -235,20 +235,18 @@ PUT /example/_doc?refresh
     "coordinates": [ 13.400544, 52.530286 ]
   }
 }
-~~~
+```
 
 - wkt 格式插入
 
-~~~sh
+```sh
 # 新增数据
 PUT /example/_doc?refresh
 {
   "name": "Wind & Wetter, Berlin, Germany",
   "location": "POINT (13.400544 52.530286)"
 }
-~~~
-
-
+```
 
 ### 4、Issue
 
@@ -261,18 +259,18 @@ docker安装ES默认采用https访问，访问地址：https://127.0.0.1:9200
 - 关于 Java 的 client 连接
 
 > **官方推荐使用**：[Elasticsearch Java API Client | Elastic](https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/index.html)
->
+> 
 > 以下已弃用（只维护到7.17版本）
->
+> 
 > [Java REST Client | Elastic](https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/index.html)
->
+> 
 > [Java High Level REST Client | Java REST Client | Elastic](https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high.html)
->
+> 
 > [Java Transport Client (deprecated) | Elastic](https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/index.html)
->
+> 
 > Spring 官方维护的 Spring Data ES 也被弃用
 
-~~~java
+```java
 // 通过https连接ES，不验证客户端证书
 final CredentialsProvider credentialsProvider =
   new BasicCredentialsProvider();
@@ -304,7 +302,7 @@ ElasticsearchClient client = new ElasticsearchClient(transport);
 BooleanResponse ping = client.ping();
 System.out.println(ping);
 restClient.close();
-~~~
+```
 
 #### （2）关于推荐的 Java SDK
 
@@ -314,7 +312,7 @@ restClient.close();
 
 - http 连接
 
-~~~java
+```java
 // Create the low-level client
 RestClient restClient = RestClient.builder(
     new HttpHost("localhost", 9200)).build();
@@ -325,11 +323,11 @@ ElasticsearchTransport transport = new RestClientTransport(
 
 // And create the API client
 ElasticsearchClient client = new ElasticsearchClient(transport);
-~~~
+```
 
 - http 密码连接
 
-~~~java
+```java
 final CredentialsProvider credentialsProvider =
     new BasicCredentialsProvider();
 credentialsProvider.setCredentials(AuthScope.ANY,
@@ -345,7 +343,7 @@ RestClientBuilder builder = RestClient.builder(
                 .setDefaultCredentialsProvider(credentialsProvider);
         }
     });
-~~~
+```
 
 - http token/API key 连接
 

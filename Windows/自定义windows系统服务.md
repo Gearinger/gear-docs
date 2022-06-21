@@ -1,11 +1,11 @@
 ## 一、命令行安装服务
 
-~~~sh
+```sh
 # 注意事项：
-# 	exe假如需要读写配置文件，那么配置文件必需写绝对路径，
-# 	因为以服务启动时的工作路径是System32，不写绝对路径会导致读写配置文件失败
- 
-#	另外需要将SERVICE用户添加到当前用户所在组(Administrators)，否则需要权限的操作将失败。
+#     exe假如需要读写配置文件，那么配置文件必需写绝对路径，
+#     因为以服务启动时的工作路径是System32，不写绝对路径会导致读写配置文件失败
+
+#    另外需要将SERVICE用户添加到当前用户所在组(Administrators)，否则需要权限的操作将失败。
 # ----1----
 sc create MyService binpath= "C:\FTP\server\s.exe" start= auto displayname= "MyService"
 sc description MyService "MyService..."
@@ -13,11 +13,11 @@ sc description MyService "MyService..."
 # 将SERVICE用户添加到当前用户所在组(Administrators)
 # ----3----
 # 启动服务进行测试
-~~~
+```
 
 ## 二、instsrv 安装开机自启服务
 
-~~~sh
+```sh
 # ----------------
 # instsrv 安装开机自启服务
 # ----1-----
@@ -42,5 +42,4 @@ instsrv MyService C:\WINDOWS\system32\srvany.exe
 # 将SERVICE用户添加到当前用户所在组(Administrators)
 # ----5----
 # 启动服务进行测试
-~~~
-
+```

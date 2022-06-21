@@ -1,8 +1,8 @@
 # pyCryptodome
 
-~~~sh
+```sh
 pip install pyCryptodome
-~~~
+```
 
 示例：
 

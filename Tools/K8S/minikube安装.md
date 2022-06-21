@@ -64,7 +64,7 @@ yum install docker-ce docker-ce-cli containerd.io
 ```
 
 > 如果失败，按照错误提醒进行配置。错误实在无法解决时，请指定版本
->
+> 
 > ```sh
 > yum install docker-ce-<VERSION_STRING> docker-ce-cli-<VERSION_STRING> containerd.io
 > ```
@@ -87,9 +87,9 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 
 ### 2、安装
 
-~~~sh
+```sh
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-~~~
+```
 
 ### 3、启动
 
@@ -98,14 +98,14 @@ minikube start --image-repository=registry.cn-hangzhou.aliyuncs.com/google_conta
 ```
 
 > （1）虚拟机需指定driver（也可不指定driver为none，直接安装virtual-box）
->
+> 
 > ```sh
 > minikube start --vm-driver=none --image-repository=registry.cn-hangzhou.aliyuncs.com/google_containers
 > ```
->
+> 
 > （2）如果提示conntrack被kubernetes依赖，安装下即可
->
-> ~~~sh
+> 
+> ```sh
 > yum install epel-release
 > yum install conntrack-tools
-> ~~~
+> ```

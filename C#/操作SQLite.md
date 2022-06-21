@@ -2,7 +2,7 @@
 
 2、参考[概述 - Microsoft.Data.Sqlite | Microsoft Docs](https://docs.microsoft.com/zh-cn/dotnet/standard/data/sqlite/?tabs=netcore-cli)
 
-~~~C#
+```C#
 using (var connection = new SqliteConnection("Data Source=hello.db"))
 {
     connection.Open();
@@ -26,7 +26,6 @@ using (var connection = new SqliteConnection("Data Source=hello.db"))
         }
     }
 }
-~~~
+```
 
 > 注：由于`nuget`存在大量不同平台、版本的sqlite包，很容易混淆，必须使用`System.Data.SQLite`
-
