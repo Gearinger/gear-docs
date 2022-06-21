@@ -1,30 +1,30 @@
 # LeafLet
 
-| name | info |      |
-| ---- | ---- | ---- |
-|      |      |      |
-|      |      |      |
-|      |      |      |
+| name | info |     |
+| ---- | ---- | --- |
+|      |      |     |
+|      |      |     |
+|      |      |     |
 
 ## example
 
-~~~js
+```js
 
-~~~
+```
 
 ## 结构
 
-~~~js
+```js
 - map
   - options
-  - remove()	// 移除地图
+  - remove()    // 移除地图
 
-  - addControl(control)	// 添加控件
-  - removeControl(control)	// 移除控件
-  - addHandle(name, HandlerClass)	// 添加回调
+  - addControl(control)    // 添加控件
+  - removeControl(control)    // 移除控件
+  - addHandle(name, HandlerClass)    // 添加回调
 
-  - addLayer(layer)	// 添加图层
-  - hasLayer(layer)	//
+  - addLayer(layer)    // 添加图层
+  - hasLayer(layer)    //
   - eachLayer(method, context)
   - removeLayer(layer)
 
@@ -34,8 +34,8 @@
   - zoomOut(delta, options)
   - project(latlng, zoom)
 
-  - fitBounds(bounds, options)	// 缩放至范围
-  - fitWorld(options)	// 缩放至全图
+  - fitBounds(bounds, options)    // 缩放至范围
+  - fitWorld(options)    // 缩放至全图
   - flyTo(targetCenter, targetZoom, options)
   - flyToBounds(bounds, options)
   - setMaxBounds(bounds)
@@ -56,19 +56,16 @@
   - getPane(pane)
   - getPanes()
 
-  - _layers	// 获取所有图层
-~~~
+  - _layers    // 获取所有图层
+```
 
-~~~js
+```js
 - layer // 要素和图层均为layer
-	
-~~~
-
-
+```
 
 ## style
 
-~~~js
+```js
 layer.setStyle({
   weight: 2,
   opacity: 1,
@@ -77,17 +74,13 @@ layer.setStyle({
   fillOpacity: 0.2,
   fillColor: '#FFEDA0'
 });
-~~~
-
-
-
-
+```
 
 ## LeafLet.pm
 
 ### 结构
 
-~~~js
+```js
 - map
   - options
   - pm
@@ -109,8 +102,8 @@ layer.setStyle({
   - zoomOut(delta, options)
   - project(latlng, zoom)
 
-  - fitBounds(bounds, options)	// 缩放至范围
-  - fitWorld(options)	// 缩放至全图
+  - fitBounds(bounds, options)    // 缩放至范围
+  - fitWorld(options)    // 缩放至全图
   - flyTo(targetCenter, targetZoom, options)
   - flyToBounds(bounds, options)
   - setMaxBounds(bounds)
@@ -130,6 +123,4 @@ layer.setStyle({
   - createPane(name, container)
   - getPane(pane)
   - getPanes()
-
-~~~
-
+```
