@@ -28,15 +28,15 @@ npx vite --help
 ### 3、创建 MapLibre 控件
 
 > 注意vue3的组件加载顺序：
-> 
+>
 > 1. x先加载js外层内容
-> 
+>
 > 2. 渲染html的元素
-> 
+>
 > 3. 加载created
-> 
+>
 > 4. 加载mounted，重新渲染html
-> 
+>
 > ![实例的生命周期](https://v3.cn.vuejs.org/images/lifecycle.svg)
 
 ```html
@@ -80,4 +80,14 @@ npx vite --help
 </style>
 ```
 
-### 4、MapLibre GL 常用方法
+### 4、MapLibre GL 功能简介
+
+#### （1）map
+
+`map` 的图层和图层源均在 `style` 中，可通过 `map.getStyle()` 获取到 `style`
+
+给 `map` 添加图层时，需要先挂在数据源到 `map` 上，再添加 `layer`
+
+~~~js
+
+~~~
