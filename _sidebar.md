@@ -6,6 +6,7 @@
   - [工具](/Tools/)
     - [Nginx](/Tools/Nginx)
     - [Picgo](/Tools/Picgo)
+  - [其他](/Other)
 - [图片]()
   - [XAG](/Image/XAG)
 - [杂文](/Essay/)
