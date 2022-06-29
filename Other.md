@@ -39,3 +39,28 @@ function mergeCells(grid: Ext.Grid.Panel, cols: Number[], isAllSome: boolean = f
 )()
 ~~~
 
+### 关于共享文档、博客
+
+#### （1）GitBook
+
+[GitBook - Where software teams break knowledge silos.](https://www.gitbook.com/)
+
+采用 MarkDown 格式，满足多人协作。有在线版本的个人免费、团队收费模式，也存在开源项目用于本地搭建（开源版本已不活跃维护）。
+
+#### （2）Hexo
+
+markdown 格式，多主题的静态 html 生成，简单轻量。
+
+#### （3）Docsify
+
+无需额外生成静态文件，原生支持 markdown 格式的超轻量文档工具。（需要手动排版首页和目录）
+
+#### （4）其他
+
+不推荐
+
+
+
+### 公共服务电子地图瓦片数据规范
+
+![image-20220629175524865](https://raw.githubusercontent.com/Gearinger/GearSetting/main/picgo/20220629-175525.png)
