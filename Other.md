@@ -1,4 +1,4 @@
-## JavaScript 注释规范
+### JavaScript 注释规范
 
 ~~~js
 /**
@@ -21,5 +21,21 @@
 function mergeCells(grid: Ext.Grid.Panel, cols: Number[], isAllSome: boolean = false) {
     // Do Something
 }
+~~~
+
+### JavaScript 避免代码污染的直接注入
+
+> 将执行内容包装成方法直接执行，避免将多余的变量暴露出来
+
+~~~js
+(
+    function(){
+        function test(a){
+            alert(a);
+        }
+
+        test("123213");
+    }
+)()
 ~~~
 
