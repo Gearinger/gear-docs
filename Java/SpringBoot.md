@@ -1646,3 +1646,67 @@ public class GlobalCorsConfig {
 >     }
 > }
 > ```
+
+### 11、Comparator、Comparable
+
+Comparator 接口，用于创建自定义比较器，针对某些类进行大小的比较
+
+Comparable 接口，用于让实现类的对应实例拥有互相比较的能力
+
+#### （1）Comparator 
+
+~~~java
+/**
+ * 自定义比较器（使用 Model 类的 number 属性进行大小比较）
+ */
+public class MyConparator implements Comparator<Model>{
+    @Override
+    public int compare(Model o1, Model o2){
+        return o1.number-o2.number;
+    }
+}
+
+/**
+ * 应用场景
+ */
+public class Application(){
+    public static void main(String[] args){
+        // 利用自定义的比较器类进行排序
+        PriorityQueue<Model> queue = new PriorityQueue<>(new MyComparator());
+    }
+}
+
+~~~
+
+#### （2）Comparable
+
+~~~java
+/**
+ * 给类的实例赋予相互比较的能力
+ */
+@Data
+public class Model implements Comparable<Model> {
+    private int number;
+
+    @Override
+    public int compareTo(Model o) {
+        return this.number - o.getNumber();
+    }
+}
+
+/**
+ * 应用场景
+ */
+public class Application(){
+    public static void main(String[] args){
+        // 利用 Model 类自带的比较器进行排序
+        PriorityQueue<Model> queue = new PriorityQueue<>();
+        Model m = new Model();
+        m.setNumber = 1;
+        queue.add(m);
+    }
+}
+~~~
+
+> PriorityQueue 必须放入可被比较排序的元素，否则会报错
+
